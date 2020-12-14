@@ -1,0 +1,139 @@
+.header{
+    position: fixed;
+    width: 100%;
+    padding-top: 5px;
+    display: flex;
+    top:0;
+    align-items: center;
+    box-shadow: 0px 0px 10px grey;
+    justify-items: center;
+    background-color: white;
+    nav{
+        margin-left: auto;
+    }
+}
+
+.down{
+    transform: rotate(180deg);
+    transition: 0.3s;
+}
+
+.up{
+    transform: rotate(0deg);
+    transition: 0.3s;
+}
+
+#header-menu{
+    display: none;
+}
+
+#header-text{
+    width: 50vw;
+    padding-left: 20px;
+    display: grid;
+    text-align: left;
+    grid-template-columns: 1fr;
+    background-color: white;
+    #header-text-subtitle{
+        font-size: 0.6rem;
+        font-style: italic;
+        text-align: center;
+    }
+}
+
+.hidden{
+    display: none;
+}
+
+.header-slider{
+    position: absolute;
+    height:100vh;
+    right: 0;
+    top: 55px;
+    z-index: -1;
+    background-color: white;
+    list-style: none;
+    color: grey;
+}
+.header-nav{
+    width: 30vw;
+    background-color: white;
+    display: flex;
+    list-style: none;
+    justify-content: end;
+    margin: 0;
+    padding: 0;
+    padding-right: 30px;
+    color: grey;
+}
+.pm-12{
+    padding: 12px;
+    margin: 12px;
+}
+
+#header-logo{
+    width: 6rem;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+// .bottom-bar{
+//     border: 2px solid white;
+//     border-top: none;
+//     border-left: none;
+//     border-right: none;
+//     &:hover{
+//         border-bottom-color: rgb(111, 146, 58);
+//     }
+// }
+
+.login{
+    border: 2px solid grey;
+    border-radius: 10px;
+    
+    &:hover{
+        background-color: black;
+        color: white;
+        border-color: black;
+    }
+    &:active{
+        background-color: black;
+        border-color: black;
+        color: white;
+    }
+}
+
+.flex-start{
+    display: flex;
+    padding:0 10px;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: rgb(75, 75, 75);
+}
+
+.click-animation:active{
+    transform: scale(0.95);
+}
+
+@media only screen and (max-width: 1050px){
+    .flex-start{
+        font-size: 1.2rem;
+    }
+    #header-logo{
+        width:4rem;
+    }
+    // #header-menu{
+    //     display: inline-flex;
+    //     margin-right: 30px;
+    //     margin-left: 30px;
+    //     padding: 0;
+    //     font-size: 0.8rem;
+    // }
+    // .header-nav{
+    //     display: none;
+    // }
+
+}
