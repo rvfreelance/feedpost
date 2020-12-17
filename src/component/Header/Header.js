@@ -36,7 +36,7 @@ const Header =(props)=>{
                     <img id='header-logo' src={Logo} alt='logo'/>
                 </div> */}
                 <div id='header-text'>
-                    <span id='header-text-title'>PostFeed</span>
+                    <span id='header-text-title'>feedPost</span>
                     {/* <span id='header-text-subtitle'>{subtitle}</span> */}
                 </div>
                 {/* <span id='header-text'>{title}</span> */}

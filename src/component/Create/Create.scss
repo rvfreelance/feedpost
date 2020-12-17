@@ -1,0 +1,51 @@
+.create{
+    width: 60vw;
+    margin: 10px 10px;
+    // padding: 100px 20px 20px 20px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgb(201, 201, 201);
+    background-color: white;
+    padding-top: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // flex-direction: row;
+}
+
+#feed-title{
+    font-family: 'Qwigley', cursive;
+    font-size: 2.5rem;
+    color: rgb(75, 75, 75);
+    text-align: left;
+}
+
+.grid-row-full{
+    display:grid;
+    grid-template-rows: repeat(1fr);
+    // background: red;
+    width: 60vw;
+
+    padding-bottom: 20px;
+    input{
+        margin: 20px;
+        font-size: 1.2rem;
+        border: none;
+        border-bottom: 2px solid grey;
+        outline: none;
+        // margin: 10px;
+        color: grey;
+    }
+}
+
+@media only screen and (max-width: 600px){
+    #feed-title{
+        font-size: 2rem;
+    }
+    .grid-row-full{
+        width: 90%;
+        input{
+            font-size: 1rem;
+        }
+    }
+}

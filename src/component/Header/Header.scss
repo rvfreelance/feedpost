@@ -34,6 +34,13 @@
     text-align: left;
     grid-template-columns: 1fr;
     background-color: white;
+    
+    #header-text-title{
+        padding-left: 30px;
+        font-family: 'Qwigley', cursive;
+        font-size: 3rem;
+        font-weight: 600;
+    }
     #header-text-subtitle{
         font-size: 0.6rem;
         font-style: italic;
@@ -60,7 +67,7 @@
     background-color: white;
     display: flex;
     list-style: none;
-    justify-content: end;
+    justify-content: flex-end;
     margin: 0;
     padding: 0;
     padding-right: 30px;

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import './App.css';
 import Header from './component/Header/Header';
 import Posts from './component/Posts/Posts';
-
+import Create from './component/Create/Create';
 
 function App() {
 
@@ -28,6 +28,13 @@ function App() {
         loginStatus={loginStatus}
         setLoginStatus={setLoginStatus}
       />
+      {
+        loginStatus?
+        (
+          <Create />
+        )
+        : null
+      }
       <Posts />
     </div>
   );
