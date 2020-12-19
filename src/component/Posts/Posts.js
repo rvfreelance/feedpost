@@ -21,14 +21,13 @@ const Posts =(props) =>{
                 <div className='post-info'>
                     <div className='post-writer'>
                         <span>Chris Hemsworth</span>
-                        
+                        <div>
+                            <button className='post-button pointer click-animation'>Post</button>
+                        </div>
                     </div>
                     <span className='post-timestamp'>Mon Dec 14 2020</span>
                 </div>
                 <p>jjdgfdnb hghdjkd mjhgdhbnd</p>
-                <div>
-                    <button className='post-button pointer click-animation'>View Post</button>
-                </div>
                 <hr/>
                 <div className='post-image'></div>
             </div>
