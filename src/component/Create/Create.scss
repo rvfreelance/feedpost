@@ -2,52 +2,69 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    padding-bottom: 30px;
 }
 
 .create{
     width: 60vw;
-    // margin: 10px 10px;
-    // padding: 100px 20px 20px 20px;
-    // width: 100%;
     border-radius: 20px;
     box-shadow: 0px 0px 10px rgb(201, 201, 201);
-    // background-color: pink;
     padding-top: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
-    // flex-direction: row;
 }
 
 #feed-title{
     width: 100%;
-    // background-color: pink;
     text-align: center;
     font-family: 'Qwigley', cursive;
     font-size: 2.5rem;
+    font-weight: 600;
     color: rgb(75, 75, 75);
-    // text-align: left;
 }
 
 .feed-post{
     background-color: rgb(75, 75, 75);
     color: white;
+    width: 200px;
+    font-size: 2rem;
+}
+
+.onebytwo{
+    // width: 60vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    // background-color: pink;
+}
+.pbtm40{
+    padding-bottom: 40px;
+}
+
+#create-post-form{
+    // background-color: rgb(238, 68, 96);
+    width: 80%;
+    padding-bottom: 50px;
+    display: flex;
+    flex-direction: column;
 }
 .grid-row-full{
-    display:grid;
-    grid-template-rows: repeat(1fr);
-    // background: red;
-    width: 60vw;
-
+    display: flex;
+    flex-direction: column;
+    // display:grid;
+    // grid-template-rows: repeat(1fr);
+    width: 60%;
     padding-bottom: 20px;
+    // background-color: yellow;
     input{
-        margin: 20px;
+        width: 100%;
+        margin: 20px 0;
+        padding: 10px 0;
         font-size: 1.2rem;
         border: none;
         border-bottom: 2px solid grey;
         outline: none;
-        // margin: 10px;
         color: grey;
     }
 }
@@ -56,11 +73,8 @@ input[type="file"]{
 }
 
 .custom-file-upload{
-    // text-decoration: underline;
     display: grid;
     grid-template-columns: 1fr;
-    padding-bottom: 20px;
-    padding-left: 20px;
     text-align: left;
 
     .custom-title{
@@ -75,6 +89,13 @@ input[type="file"]{
 
 @media only screen and (max-width: 600px){
  
+    #create-post-form{
+        width: 90%;
+    }
+    .onebytwo{
+        // padding: 0;
+        width: 100%;
+    }
     .create{
         width: 90%;
     }
