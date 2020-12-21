@@ -25,7 +25,11 @@ const Header =(props)=>{
         //         console.log(error)
         //     })
         // }
-        props.setLoginStatus(!props.loginStatus)
+        // props.setLoginStatus(!props.loginStatus)
+
+        if(!props.loginStatus){
+            props.setLoginPop(true)
+        }
     }
     // const [menuProducts, setMenuProducts ] = useState(false);
     // const [menuServices, setMenuServices ] = useState(false);

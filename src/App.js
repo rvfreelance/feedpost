@@ -4,10 +4,12 @@ import './App.css';
 import Header from './component/Header/Header';
 import Posts from './component/Posts/Posts';
 import Create from './component/Create/Create';
+import Login from './component/Login/Login';
 
 function App() {
 
   const [ loginStatus, setLoginStatus ] = useState(false);
+  const [loginPop, setLoginPop] = useState(false)
   return (
     <div className="App">
       {/* <header className="App-header">
@@ -27,7 +29,15 @@ function App() {
       <Header 
         loginStatus={loginStatus}
         setLoginStatus={setLoginStatus}
+        setLoginPop={setLoginPop}
       />
+      {
+        loginPop? 
+        (
+          <Login />
+        )
+        : null
+      }
       {
         loginStatus?
         (
