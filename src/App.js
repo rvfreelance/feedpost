@@ -34,7 +34,9 @@ function App() {
       {
         loginPop? 
         (
-          <Login />
+          <Login 
+            setLoginPop={setLoginPop}
+          />
         )
         : null
       }

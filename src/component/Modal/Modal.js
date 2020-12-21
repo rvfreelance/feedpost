@@ -5,8 +5,10 @@ import './Modal.scss';
 const Modal =(props) =>{
 
     return(
-        <div className='popup-modal'>
-            {props.children}
+        <div className='modal-cover' onClick={(e)=>props.setVisibility(false)}>
+            <div className='popup-modal' onClick={(e)=>e.stopPropagation()}>
+                {props.children}
+            </div>
         </div>
     )
 }

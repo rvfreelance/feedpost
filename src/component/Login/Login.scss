@@ -1,0 +1,50 @@
+.slide-left{
+    transform: translateX(-100vw);
+    transition-duration: 0.3s;
+}
+.slide-right{
+    transform: translateX(0);
+    transition-duration: 0.3s;
+}
+.slide-in{
+    transform: translateX(0);
+    transition-duration: 0.3s;
+}
+.slide-out{
+    transform: translateX(200vw);
+    transition-duration: 0.3s;
+}
+
+#login-modal{
+    position: fixed;
+}
+
+.login-button{
+    // background-color: rgb(75, 75, 75);
+    // color: white;
+    background-color: rgba(238, 68, 96, 0.178);
+    color: rgb(238, 68, 96);
+    border-color: rgb(238, 68, 96);
+    width: 200px;
+    font-size: 2rem;
+    
+    &:hover{
+        background-color: white;
+    }
+    &:active{
+        background-color: rgba(238, 68, 96, 1);
+        color: white;
+    }
+    &:disabled{
+        color: white;
+        background-color: rgb(194, 194, 194);
+        border-color: rgb(194, 194, 194);
+        cursor: not-allowed;
+    }
+}
+
+@media only screen and (max-width: 600px){
+    .slide-left{
+        transition-duration: 0.1s;
+    }
+}

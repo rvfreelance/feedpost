@@ -1,16 +1,27 @@
-.popup-modal{
-    left: 5%;
-    top: 15%;
+.modal-cover{
+    bottom: 0;
+    width:100%;
+    height:90%;
+    // color: rgb(106, 106, 248);
+    background-color: rgba(255, 255, 255, 0.5);
     position: fixed;
+    display: flex;
+    align-items: center;
+}
+
+.popup-modal{
+    // left: 5%;
+    // top: 15%;
+    position: relative;
     background-color: pink;
-    width: 90%;
-    height: 70%;
+    width: 100%;
+    height: 80%;
     overflow: hidden;
     background: rgba( 255, 255, 255, 0.50 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 7.0px );
     -webkit-backdrop-filter: blur( 7.0px );
-    border-radius: 10px;
+    // border-radius: 10px;
     border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
