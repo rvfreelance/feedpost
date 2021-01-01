@@ -91,17 +91,18 @@
 .login{
     border: 2px solid grey;
     border-radius: 10px;
-    
+    // color: rgb(75, 75, 75);
+
     &:hover{
-        background-color: black;
+        background-color: rgb(75, 75, 75);
         color: white;
-        border-color: black;
+        border-color: rgb(75, 75, 75);
     }
-    &:active{
-        background-color: black;
-        border-color: black;
-        color: white;
-    }
+    // &:active{
+    //     background-color: black;
+    //     border-color: black;
+    //     color: white;
+    // }
 }
 
 .flex-start{

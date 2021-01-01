@@ -5,6 +5,7 @@ import Header from './component/Header/Header';
 import Posts from './component/Posts/Posts';
 import Create from './component/Create/Create';
 import Login from './component/Login/Login';
+import ErrorBoundary from './component/ErrorBoundary/ErrorBoundary';
 
 import { firestore } from './firebase/firebase';
 
@@ -78,68 +79,74 @@ function App() {
         setLoginPop={setLoginPop}
         setPosts={setPosts}
       />
-      {
-        loginPop || (!loginStatus && addFeed)? 
-        (
-          <Login 
-            setLoginStatus={setLoginStatus}
-            setLoginPop={setLoginPop}
-            fetchPosts={FetchAllPosts}
-            setName={setName}
-            setUid={setUid}
-            setImg={setImg}
-          />
-        )
-        : null
-      }
-      {
-        loginStatus && addFeed?
-        (
-          <Create 
-            setAddFeed={setAddFeed}
-            name={name}
-            uid={uid}
-            img={img}
-            setPosts={setPosts}
-            posts={posts}
-          />
-        )
-        : null
-      }
-      <Posts 
-        posts={posts}
-        setPosts={setPosts}
-        setAddFeed={setAddFeed}
-        refreshPosts={refreshPosts}
-        setRefreshPosts={setRefreshPosts}
-        noShow={noShow}
-        width={width}
-        loginStatus={loginStatus}
-        setLoginPop={setLoginPop}
-      />
-      <div className={`${width<=800 ? 'bottom-fixed-bg':''} ${loginPop? 'hidden':''}`}>
-        {
-          loginStatus && !addFeed ? 
-          ( 
-            <>
-              <button className={`update-button click-animation pointer ${refreshPosts? 'rotate-infinite': ''}`}
-                disabled={refreshPosts? true : false}
-                title='Refresh'
-                onClick={()=>{setRefreshPosts(true); FetchAllPosts()}}
-              >
-                &#x21bb;
-              </button>
 
-              <div className='round-button pointer click-animation shadow'
-                onClick={()=>setAddFeed(true)}
-              >
-                <span>+</span>
-              </div>
-            </>
-          ) 
+      <ErrorBoundary 
+        width={width}  
+      >
+        {
+          loginPop || (!loginStatus && addFeed)? 
+          (
+            <Login 
+              setLoginStatus={setLoginStatus}
+              setLoginPop={setLoginPop}
+              fetchPosts={FetchAllPosts}
+              setName={setName}
+              setUid={setUid}
+              setImg={setImg}
+            />
+          )
           : null
         }
-      </div>
+        {
+          loginStatus && addFeed?
+          (
+            <Create 
+              setAddFeed={setAddFeed}
+              name={name}
+              uid={uid}
+              img={img}
+              setPosts={setPosts}
+              posts={posts}
+            />
+          )
+          : null
+        }
+        <Posts 
+          posts={posts}
+          setPosts={setPosts}
+          setAddFeed={setAddFeed}
+          refreshPosts={refreshPosts}
+          setRefreshPosts={setRefreshPosts}
+          noShow={noShow}
+          width={width}
+          loginStatus={loginStatus}
+          setLoginPop={setLoginPop}
+        />
+        <div className={`${width<=800 ? 'bottom-fixed-bg':''} ${loginPop? 'hidden':''}`}>
+          {
+            loginStatus && !addFeed ? 
+            ( 
+              <>
+                <button className={`update-button click-animation pointer ${refreshPosts? 'rotate-infinite': ''}`}
+                  disabled={refreshPosts? true : false}
+                  title='Refresh'
+                  onClick={()=>{setRefreshPosts(true); FetchAllPosts()}}
+                >
+                  &#x21bb;
+                </button>
+
+                <div className='round-button pointer click-animation shadow'
+                  onClick={()=>setAddFeed(true)}
+                >
+                  <span>+</span>
+                </div>
+              </>
+            ) 
+            : null
+          }
+        </div>
+      </ErrorBoundary>
+
     </div>
   );
 }

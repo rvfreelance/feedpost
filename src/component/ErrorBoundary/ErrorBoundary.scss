@@ -1,0 +1,101 @@
+.error-boundary{
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+    .error-text{
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        
+        .small-text{
+            color: #ee4460;
+            font-size: 1.2rem;
+        }
+        .big-text{
+            font-size: 2rem;
+        }
+    
+    }
+}
+
+.error-footer{
+    position: fixed;
+    bottom: 40px;
+
+    font-size: 0.8rem;
+
+    button{
+        width: 250px;
+        outline: none;
+        // background: none;
+        border: none;
+    }
+}
+
+.clr-blue{
+    color: #ee4460;
+    // color: rgb(106, 106, 248);
+}
+
+.text-copied{
+    position: absolute;
+    left: 75px;
+    bottom: 0;
+    z-index: -1; 
+    // opacity: 0;
+    // font-weight: 600;
+    transform-origin: bottom;
+    background-color: rgb(75, 75, 75);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.click-animation-large{
+    // transform-origin: bottom;
+    animation: translate1 1s ease-in-out forwards normal;
+}
+.text-slide-away{
+    opacity:0;
+    // z-index:-1;
+    // animation: translate1 1s ease-out forwards normal;
+}
+
+@keyframes translate1{
+    0% {transform: translateY(0px); opacity:0;}
+    25% {transform: translateY(-40px); opacity:1;}
+    50% {transform: translateY(-40px); opacity:1;}
+    100% {transform: translateY(-40px); opacity:0;}
+}
+
+@keyframes scale1{
+    0% { transform: translateY(0px);}
+    // 25% { transform: translateY(-100px);}
+    25% { transform: translateY(20px);}
+    50% { transform: translateY(20px);}
+    100% { transform: translateY(100px);}
+}
+
+@media only screen and (max-width: 900px){
+    .error-boundary{
+        display: flex;
+        flex-direction: column;
+        
+        .error-text{
+            text-align: center;
+            
+            .small-text{
+                color: #ee4460;
+                font-size: 1rem;
+            }
+            .big-text{
+                font-size: 1.6rem;
+            }
+        
+        }
+    }
+}
