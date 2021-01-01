@@ -76,6 +76,7 @@ function App() {
         loginStatus={loginStatus}
         setLoginStatus={setLoginStatus}
         setLoginPop={setLoginPop}
+        setPosts={setPosts}
       />
       {
         loginPop || (!loginStatus && addFeed)? 
