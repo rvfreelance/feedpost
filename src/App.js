@@ -22,6 +22,7 @@ function App() {
   const [ img, setImg ] = useState(null);
   const [ posts, setPosts ] = useState([]);
   const [ refreshPosts, setRefreshPosts ] = useState(false);
+  const [ error, setError ] = useState(false);
   
   const { width } = WindowDimension();
 
@@ -78,10 +79,12 @@ function App() {
         setLoginStatus={setLoginStatus}
         setLoginPop={setLoginPop}
         setPosts={setPosts}
+        error={error}
       />
 
       <ErrorBoundary 
-        width={width}  
+        width={width}
+        setError={setError}  
       >
         {
           loginPop || (!loginStatus && addFeed)? 

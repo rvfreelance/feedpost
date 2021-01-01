@@ -15,11 +15,12 @@ class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch =() =>{
+        this.props.setError(true);
         this.setState({ status: true })
     }
 
     render(){
-        if(!this.state.status){
+        if(this.state.status){
             return(
                 <div className='error-boundary'>
                     <div className='error-text'>

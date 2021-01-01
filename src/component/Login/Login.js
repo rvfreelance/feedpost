@@ -31,7 +31,7 @@ class Login extends React.Component{
     handleSignIn =() =>{ 
         const { email, password } = this.state; 
 
-        auth.signInWithEmailAndPassword(email, password)
+        auth.signInWithEmailAndPasswor(email, password)
             .then(data=>{
                 this.setState({uid: data.user.uid}, ()=>{
                     firestore.doc(`/feeders/${this.state.uid}`).get()

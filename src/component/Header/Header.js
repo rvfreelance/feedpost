@@ -65,7 +65,7 @@ const Header =(props)=>{
                 {/* <div onClick={()=>setDropdown(!dropdown)}>
                     <img id='header-menu' className={`pointer ${dropdown? 'down':'up'}`} src={Menu} alt={'menu'} width='30px'/>
                 </div> */}
-                <ul className='header-nav'>
+                <ul className={`header-nav ${props.error? 'hidden':''}`}>
                     {/* <li className='pm-12 pointer bottom-bar' onClick={()=>{props.onRouteChange('home'); setDropdown(!dropdown)}}>
                         Home
                     </li> */}
