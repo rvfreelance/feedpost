@@ -19,9 +19,17 @@
     position: fixed;
 }
 
+.login-card-title{
+    font-size: 5.5rem; 
+    color: rgb(75, 75, 75); 
+    font-weight: 500; 
+    font-family:'Qwigley', cursive;
+}
+
 .login-button{
     // background-color: rgb(75, 75, 75);
     // color: white;
+    // font-family: 'Montserrat', cursive;
     background-color: rgba(238, 68, 96, 0.178);
     color: rgb(238, 68, 96);
     border-color: rgb(238, 68, 96);

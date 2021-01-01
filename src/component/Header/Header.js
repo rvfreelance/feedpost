@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { auth } from '../../firebase/firebase';
 // import Logo from '../../assets/svg/logo_circle.svg';
 // import Menu from '../../assets/svg/menu_gap.svg';
 // import WindowDimension from '../WindowDimension/WindowDimension';
@@ -11,10 +12,21 @@ import './Header.scss';
 const Header =(props)=>{
 
     // const { width } = WindowDimension();
-    const [ dropdown, setDropdown ] = useState(false);
+    // const [ dropdown, setDropdown ] = useState(false);
     
     
-    const handleClick =() =>{
+    const handleClick =(button) =>{
+
+        if(button==='logout'){
+            auth.signOut().then(()=>{
+                props.setLoginStatus(false);
+                props.setLoginPop(true);
+            })
+        }else if(button==='login'){
+            props.setLoginPop(true);
+        }else{
+            return;
+        }
         // if(!props.loginStatus){
         //     props.onRouteChange('login')
         // }else{
@@ -27,9 +39,9 @@ const Header =(props)=>{
         // }
         // props.setLoginStatus(!props.loginStatus)
 
-        if(!props.loginStatus){
-            props.setLoginPop(true)
-        }
+        // if(!props.loginStatus){
+        //     props.setLoginPop(true)
+        // }
     }
     // const [menuProducts, setMenuProducts ] = useState(false);
     // const [menuServices, setMenuServices ] = useState(false);
@@ -67,7 +79,16 @@ const Header =(props)=>{
                             </ul> 
                     </li> */}
                     {/* <li className='pm-12 pointer bottom-bar' onClick={()=>{props.onRouteChange('contact'); setDropdown(!dropdown)}}>Contact</li> */}
-                    <li className='pm-12 pointer click-animation login' onClick={()=>{handleClick(); setDropdown(!dropdown)}}>{props.loginStatus? 'Logout': 'Login'}</li>
+                    {
+                        props.loginStatus? 
+                        (
+                            <li className='pm-12 pointer click-animation login' onClick={()=>{handleClick('logout');}}>Logout</li>
+                        )
+                        :
+                        (
+                            <li className='pm-12 pointer click-animation login' onClick={()=>{handleClick('login');}}>Login</li>
+                        )
+                    }
                 </ul>
             </nav>
         </div>
