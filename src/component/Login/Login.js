@@ -87,12 +87,16 @@ class Login extends React.Component{
                 alert("Network connectivity issue. Kindly check your internet connection.")
             }else if(error.code === 'auth/email-already-in-use'){
                 alert("We are finding it difficult to register new users at the moment, kindly try again after some time");
+            }else{
+                firestore.collection('/registrationErrors').add({
+                    'error': error.code,
+                    'error_info': error.message,
+                    'error_logged': firestoreTimestamp,
+                    'email': email,
+                }).then(()=>console.log('Error successfully logged.'))
+                .catch(()=>console.log('Unable to log error.'));
+                // console.log(error)
             }
-            // console.log('Something went wrong.');
-            // let errorCode = error.code;
-            // let errorMsg = error.message;
-
-            // console.log("Error: ", errorCode, ": ", errorMsg);
         })
     }
 
@@ -119,7 +123,6 @@ class Login extends React.Component{
             borderRadius:'25px'
         }
 
-        throw 'error';
         return(
             <Modal setVisibility={this.props.setLoginPop}>
                 <div style={{height:'100%', display:'flex', justifyContent:'center'}}>

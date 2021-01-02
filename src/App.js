@@ -79,12 +79,15 @@ function App() {
         setLoginStatus={setLoginStatus}
         setLoginPop={setLoginPop}
         setPosts={setPosts}
+        setName={setName}
+        setUid={setUid}
         error={error}
       />
 
       <ErrorBoundary 
         width={width}
         setError={setError}  
+        uid={uid}
       >
         {
           loginPop || (!loginStatus && addFeed)? 

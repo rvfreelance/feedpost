@@ -20,6 +20,8 @@ const Header =(props)=>{
         if(button==='logout'){
             auth.signOut().then(()=>{
                 props.setPosts([]);
+                props.setName('');
+                props.setUid(null);
                 props.setLoginStatus(false);
                 props.setLoginPop(true);
             })
