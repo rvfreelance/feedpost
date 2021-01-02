@@ -7,6 +7,7 @@ import Create from './component/Create/Create';
 import Login from './component/Login/Login';
 import ErrorBoundary from './component/ErrorBoundary/ErrorBoundary';
 
+import ReloadSvg from './assets/svg/reload.svg';
 import { firestore } from './firebase/firebase';
 
 import WindowDimension from './component/WindowDimension/WindowDimension';
@@ -138,7 +139,8 @@ function App() {
                   title='Refresh'
                   onClick={()=>{setRefreshPosts(true); FetchAllPosts()}}
                 >
-                  &#x21bb;
+                  <img src={ReloadSvg} width='25px' alt='refresh' />
+                  {/* &#x21bb; */}
                 </button>
 
                 <div className='round-button pointer click-animation shadow'
