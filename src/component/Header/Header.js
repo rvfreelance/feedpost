@@ -67,7 +67,7 @@ const Header =(props)=>{
                 {/* <div onClick={()=>setDropdown(!dropdown)}>
                     <img id='header-menu' className={`pointer ${dropdown? 'down':'up'}`} src={Menu} alt={'menu'} width='30px'/>
                 </div> */}
-                <ul className={`header-nav ${props.error? 'hidden':''}`}>
+                <ul className='header-nav'>
                     {/* <li className='pm-12 pointer bottom-bar' onClick={()=>{props.onRouteChange('home'); setDropdown(!dropdown)}}>
                         Home
                     </li> */}
@@ -83,6 +83,7 @@ const Header =(props)=>{
                     </li> */}
                     {/* <li className='pm-12 pointer bottom-bar' onClick={()=>{props.onRouteChange('contact'); setDropdown(!dropdown)}}>Contact</li> */}
                     {
+                        props.error? null :
                         props.loginStatus? 
                         (
                             <li className='pm-12 pointer click-animation login' onClick={()=>{handleClick('logout');}}>Logout</li>
