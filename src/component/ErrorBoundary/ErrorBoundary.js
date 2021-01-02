@@ -31,13 +31,13 @@ class ErrorBoundary extends React.Component {
         }).then(()=>console.log('Error information logged, we will keep this information for further development.'))
         // console.log(error, errorInfo)
         .catch((error)=>{
-            console.log('error while logging', error);
+            // console.log('error while logging', error);
             console.log('Unable to log error information.');
         });
     }
 
     render(){
-        if(this.state.hasError){
+        if(!this.state.hasError){
             return(
                 <div className='error-div'>
                     <div className='error-boundary'>
@@ -46,7 +46,9 @@ class ErrorBoundary extends React.Component {
                             <span className='big-text'>We are working on it !</span>
                         </div>
                         <img src={ErrorImg} width={this.props.width>800 ? '500px': '300px'} alt='error'/>
-                        <span className='error-footer'>See this more often? Write to us<br/>
+                        <div className='error-footer'>
+                            <span>See this more often? Tell us more</span>
+                            <br/>
                             <span className={`clr-ee4460 pointer`} 
                                 style={{color: this.state.textCopied? 'rgb(75,75,75)': null}}
                                 onClick={() => {
@@ -55,13 +57,15 @@ class ErrorBoundary extends React.Component {
                             >
                                 {this.state.supportEmail}
                             </span>
-                            <br/>
-                            <span className={`text-copied ${this.state.textCopied? 'click-animation-large':'text-slide-away'}`}
-                                onAnimationEnd={()=>this.setState({textCopied:false})}
-                            >
-                                Copied
-                            </span>
-                        </span>
+                            
+                            <div>
+                                <span className={`text-copied ${this.state.textCopied? 'click-animation-large':'text-slide-away'}`}
+                                    onAnimationEnd={()=>this.setState({textCopied:false})}
+                                >
+                                    Copied
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )
