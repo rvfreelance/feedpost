@@ -8,19 +8,24 @@ class ErrorBoundary extends React.Component {
     constructor(props){
         super(props);
         this.state={
-            status: false,
+            hasError: false,
             supportEmail: 'support@envoq.in',
             textCopied: false,
         }
     }
 
-    componentDidCatch =() =>{
+    static getDerivedStateFromError(error) {    
+        return { hasError: true };  
+    }
+
+
+    componentDidCatch =(error, errorInfo) =>{
         this.props.setError(true);
-        this.setState({ status: true })
+        console.log(error, errorInfo)
     }
 
     render(){
-        if(this.state.status){
+        if(this.state.hasError){
             return(
                 <div className='error-boundary'>
                     <div className='error-text'>

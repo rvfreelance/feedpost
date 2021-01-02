@@ -31,7 +31,7 @@ class Login extends React.Component{
     handleSignIn =() =>{ 
         const { email, password } = this.state; 
 
-        auth.signInWithEmailAndPasswor(email, password)
+        auth.signInWithEmailAndPassword(email, password)
             .then(data=>{
                 this.setState({uid: data.user.uid}, ()=>{
                     firestore.doc(`/feeders/${this.state.uid}`).get()
@@ -118,6 +118,8 @@ class Login extends React.Component{
             alignSelf:'center', 
             borderRadius:'25px'
         }
+
+        throw 'error';
         return(
             <Modal setVisibility={this.props.setLoginPop}>
                 <div style={{height:'100%', display:'flex', justifyContent:'center'}}>
