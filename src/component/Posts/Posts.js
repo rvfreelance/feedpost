@@ -1,5 +1,5 @@
 import React from 'react';
-
+import SearchBar from '../SearchBar/SearchBar';
 import WorldPost from '../../assets/svg/world_post.svg';
 import Loading from '../Loading/Loading';
 
@@ -7,10 +7,14 @@ import './Posts.scss';
 
 
 const Posts =(props) =>{
-    const { posts, noShow } = props;
+    const { posts, noShow, loginStatus } = props;
 
     return(
         <div className={`posts ${props.width<=800? 'pb-90':''}`}>
+            {
+                loginStatus? <SearchBar width={props.width}/> : null
+            }
+
             {
                 posts.length? 
                 (

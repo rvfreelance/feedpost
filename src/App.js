@@ -15,7 +15,7 @@ import WindowDimension from './component/WindowDimension/WindowDimension';
 
 function App() {
 
-  const [ loginStatus, setLoginStatus ] = useState(false);
+  const [ loginStatus, setLoginStatus ] = useState(true);
   const [ loginPop, setLoginPop ] = useState(false);
   const [ addFeed, setAddFeed ] = useState(false);
   const [ name, setName ] = useState('');
@@ -83,6 +83,7 @@ function App() {
         setName={setName}
         setUid={setUid}
         error={error}
+        width={width}
       />
 
       <ErrorBoundary 
@@ -129,7 +130,7 @@ function App() {
           loginStatus={loginStatus}
           setLoginPop={setLoginPop}
         />
-        <div className={`${width<=800 ? 'bottom-fixed-bg':''} ${loginPop? 'hidden':''}`}>
+        <div className={`${width<=800 ? 'bottom-fixed-bg':''} ${loginPop || addFeed? 'hidden':''}`}>
           {
             loginStatus && !addFeed ? 
             ( 
