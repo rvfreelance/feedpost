@@ -7,18 +7,45 @@ import './Posts.scss';
 
 
 const Posts =(props) =>{
-    const { posts, noShow, loginStatus } = props;
-
+    const { posts, noShow, loginStatus, setFilteredPosts, filteredPosts, searchValue, setSearchValue } = props;
+    const renderPosts = () =>{
+        if(searchValue.length){
+            return filteredPosts;
+        }else{
+            return posts;
+        }
+    }
     return(
         <div className={`posts ${props.width<=800? 'pb-90':''}`}>
             {
-                loginStatus? <SearchBar width={props.width}/> : null
+                loginStatus? 
+                    <SearchBar 
+                        width={props.width} 
+                        posts={posts} 
+                        setFilteredPosts={setFilteredPosts}
+                        searchValue={searchValue}
+                        setSearchValue={setSearchValue}    
+                    /> 
+                    : 
+                    null
+            }
+
+            {
+                searchValue.length ?
+                
+                    filteredPosts.length?
+                    <span>Showing results for <strong><em>{searchValue}</em></strong></span>
+                    :
+                    <span>No results to show for <strong><em>{searchValue}</em></strong></span>
+
+                :
+                null
             }
 
             {
                 posts.length? 
                 (
-                    posts.map(post=>{
+                    renderPosts().map(post=>{
                         return(
                             <div key={post.fId} className={`${post.fImgLink? 'post-large':'post-small'} post`}>
                                 <div className='post-info'>

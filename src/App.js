@@ -15,19 +15,21 @@ import WindowDimension from './component/WindowDimension/WindowDimension';
 
 function App() {
 
-  const [ loginStatus, setLoginStatus ] = useState(true);
-  const [ loginPop, setLoginPop ] = useState(false);
-  const [ addFeed, setAddFeed ] = useState(false);
-  const [ name, setName ] = useState('');
-  const [ uid, setUid ] = useState(null);
-  const [ img, setImg ] = useState(null);
-  const [ posts, setPosts ] = useState([]);
-  const [ refreshPosts, setRefreshPosts ] = useState(false);
-  const [ error, setError ] = useState(false);
-  
+  const [ loginStatus, setLoginStatus ] = useState(false);      //false
+  const [ loginPop, setLoginPop ] = useState(false);            //false
+  const [ addFeed, setAddFeed ] = useState(false);              //false
+  const [ name, setName ] = useState('');                       //''
+  const [ uid, setUid ] = useState(null);                       //null
+  const [ img, setImg ] = useState(null);                       //null
+  const [ posts, setPosts ] = useState([]);                     //[]
+  const [ refreshPosts, setRefreshPosts ] = useState(false);    //false
+  const [ error, setError ] = useState(false);                  //false
+  const [ filteredPosts, setFilteredPosts ] = useState([]);     //[]
+  const [searchValue, setSearchValue] = useState('');           //''
+  const [ noShow, setNoShow ] = useState(false);                //false
+
   const { width } = WindowDimension();
 
-  const [ noShow, setNoShow ] = useState(false);
   let feedsDb =[];
 
   const FetchAllPosts =() =>{
@@ -129,6 +131,10 @@ function App() {
           width={width}
           loginStatus={loginStatus}
           setLoginPop={setLoginPop}
+          filteredPosts={filteredPosts}
+          setFilteredPosts={setFilteredPosts}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
         />
         <div className={`${width<=800 ? 'bottom-fixed-bg':''} ${loginPop || addFeed? 'hidden':''}`}>
           {
@@ -138,7 +144,12 @@ function App() {
                 <button className={`update-button click-animation pointer ${refreshPosts? 'rotate-infinite': ''}`}
                   disabled={refreshPosts? true : false}
                   title='Refresh'
-                  onClick={()=>{setRefreshPosts(true); FetchAllPosts()}}
+                  onClick={()=>{
+                      setRefreshPosts(true);
+                      setFilteredPosts([]);
+                      setSearchValue(''); 
+                      FetchAllPosts();
+                    }}
                 >
                   <img src={ReloadSvg} width='25px' alt='refresh' />
                   {/* &#x21bb; */}

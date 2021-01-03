@@ -10,10 +10,17 @@ async function trimString(string) {
     return tempStr;
 }
 
+async function filterSearchResults(posts, search) {
+    let filtered = await posts.filter(post=>{
+        return post.fTitle.toLowerCase().includes(search.toLowerCase()) || 
+                post.feederName.toLowerCase().includes(search.toLowerCase())
+    })
 
-const SearchBar =({ width, place }) =>{
-    const [searchValue, setSearchValue] = useState('')
-
+    // console.log(filtered);
+    return filtered;
+}
+const SearchBar =({ width, posts, setFilteredPosts, searchValue, setSearchValue }) =>{
+    const [ search, setSearch ] = useState('');
     // const SearchField =(str) =(setSearchValue(str)) => trimString(str);
 
     const onSearchChange = (string) =>{
@@ -22,15 +29,24 @@ const SearchBar =({ width, place }) =>{
         // console.log('Search String - ', searchStr);
         // const response = await searchStr.response.string();
         // console.log('Response - ', response)
-        setSearchValue(string);
+        setSearch(string);
+        if(!string.length){
+            setSearchValue('')
+            setFilteredPosts([]);
+        }
     }
 
     const onSubmitSearch = async() =>{
 
-        if(searchValue.length){
-            const searchStr = await trimString(searchValue);
-            console.log('Trimmed String', searchStr);
-            console.log('form submitted');
+        if(search.length){
+            const searchStr = await trimString(search);
+            // console.log('Trimmed String', searchStr);
+            // console.log('form submitted');
+            const filteredPosts = await filterSearchResults(posts, searchStr);
+            console.log('Filtered Search Results', filteredPosts);
+
+            setSearchValue(searchStr);
+            setFilteredPosts(filteredPosts);
         }else{
             console.log('form not submitted');
             return null;
@@ -54,8 +70,8 @@ const SearchBar =({ width, place }) =>{
                 <div className='bar'>
                         <input 
                             type='search'
-                            value={searchValue}
-                            placeholder='Search posts'
+                            value={search}
+                            placeholder='Search'
                             onChange={(e)=>onSearchChange(e.target.value)}
                         />
                         <button className='icon-div flex-c-c pointer click-animation' type='submit'>
