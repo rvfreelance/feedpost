@@ -1,5 +1,5 @@
 import React from 'react';
-// import SearchBar from '../SearchBar/SearchBar';
+
 import { auth } from '../../firebase/firebase';
 
 import './Header.scss';
@@ -21,7 +21,7 @@ const Header =(props)=>{
         }else{
             return;
         }
-
+    }
 
     return(
         <div className='header'>
@@ -30,13 +30,6 @@ const Header =(props)=>{
                     <span id='header-text-title'>feed<span style={{color:'rgb(238, 68, 96)'}}>Post</span></span>
                 </div>
             </div>
-
-            {/* <div style={{backgroundColor:'pink'}}>
-                {
-                    props.error? null :
-                    props.loginStatus? <SearchBar place='header' width={props.width}/> : null
-                }
-            </div>     */}
             <nav>
                 
                 <ul className='header-nav'>
