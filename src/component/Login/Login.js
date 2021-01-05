@@ -146,6 +146,7 @@ class Login extends React.Component{
                                 placeholder='Email'
                                 value={email}
                                 onChange={(e)=>{this.setState({ email: e.target.value, invalidEmailPassword: false})}}
+                                autoFocus
                                 />
                             <input 
                                 style={inputStyling}

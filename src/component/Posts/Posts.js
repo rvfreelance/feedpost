@@ -2,6 +2,7 @@ import React from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import WorldPost from '../../assets/svg/world_post.svg';
 import Loading from '../Loading/Loading';
+import { storage } from '../../firebase/firebase';
 
 import './Posts.scss';
 
@@ -15,6 +16,24 @@ const Posts =(props) =>{
             return posts;
         }
     }
+
+    //Give <img/> their image url for the respective posts
+    const feedImageUrl =(feedId, link) =>{
+        console.log(feedId, link);
+        storage.refFromURL(link)
+            .getDownloadURL()
+            .then(url=>{
+                console.log('feedId: ', feedId, ', link: ', link, ', URL: ', url);
+                return url;
+            })
+            .catch(error=>console.log(error))
+    } 
+
+    // const replaceUrl =() =>{
+        // let img = document.getElementById('138TbZThBVAhEY2WDpwT');
+        // img.src = 'https://firebasestorage.googleapis.com/v0/b/feeds-db.appspot…hop.jpg?alt=media&token=224e9865-0964-42de-ac63-06231639ed0c';
+    // }
+
     return(
         <div className={`posts ${props.width<=800? 'pb-90':''}`}>
             {
@@ -65,8 +84,18 @@ const Posts =(props) =>{
                                     {/* <hr/> */}
                                 </p>
                                 {/* <span style={{fontSize:'0.8rem'}}>{post.fBrief}</span> */}
-                                <hr className={post.fImgLink? '':'hidden'}/>
-                                <div className={post.fImgLink? 'post-image':'hidden'}></div>
+                                <hr style={{width:'80%', color:'rgba(235, 235, 235, 0.5)'}} 
+                                    className={post.fImgLink? '':'hidden'}/>
+                                {
+                                    post.fImgLink ? 
+                                        <div className={post.fImgLink? 'post-image':'hidden'}>
+                                            {/* <img id={post.fId} src={feedImageUrl(post.fId, post.fImgLink)} alt=''/> */}
+                                            <img id={post.fId} src={post.fImgLink} width='100%' alt=''/>
+                                            {/* <img id={post.fId} src="https://firebasestorage.googleapis.com/v0/b/feeds-db.appspot…hop.jpg?alt=media&token=224e9865-0964-42de-ac63-06231639ed0c" alt=''/> */}
+                                        </div>
+                                    :
+                                    null
+                                }
                             </div>
                         )
                     })

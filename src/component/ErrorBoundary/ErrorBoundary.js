@@ -54,6 +54,7 @@ class ErrorBoundary extends React.Component {
                                 onClick={() => {
                                     this.setState({textCopied:true}); 
                                     navigator.clipboard.writeText(this.state.supportEmail)}}
+                                title='Click to copy email address'
                             >
                                 {this.state.supportEmail}
                             </span>
