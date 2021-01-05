@@ -66,29 +66,33 @@ const Posts =(props) =>{
                 (
                     renderPosts().map(post=>{
                         return(
-                            <div key={post.fId} className={`${post.fImgLink? 'post-large':'post-small'} post`}>
-                                <div className='post-info'>
-                                    <div className='post-writer'>
+                            <div key={post.fId} className={`${post.fImgLink? 'x-post-large':'x-post-small'} x-post`}>
+                                <div className='x-post-info'>
+                                    <div className='x-post-writer'>
                                         <span style={{textTransform:'capitalize'}}>{post.feederName}</span>
-                                        <div className={post.fLink? '': 'hidden'}>
-                                            <button className='post-button pointer click-animation'
-                                                onClick={()=> window.open(post.fLink, '_blank')}
-                                            >
-                                                Post
-                                            </button>
-                                        </div>
                                     </div>
-                                    <span className='post-timestamp'>{post.fUpdated}</span>
+                                    <div className={post.fLink? 'x-post-button-div': 'hidden'}>
+                                        <button className='x-post-button pointer click-animation'
+                                            onClick={()=> window.open(post.fLink, '_blank')}
+                                        >
+                                            Post
+                                        </button>
+                                    </div>
                                 </div>
-                                <p>{post.fTitle}
+                                <div className='x-post-desc'>
+                                    <p className='x-post-title'>{post.fTitle}</p>
+                                    <div className='x-post-brief'>
+                                        <span>{post.fBrief}</span>
+                                    </div>
                                     {/* <hr/> */}
-                                </p>
+                                </div>
+                                {/* experimentalcss looks good */}
                                 {/* <span style={{fontSize:'0.8rem'}}>{post.fBrief}</span> */}
                                 <hr style={{width:'80%', color:'rgba(235, 235, 235, 0.5)'}} 
                                     className={post.fImgLink? '':'hidden'}/>
                                 {
                                     post.fImgLink ? 
-                                        <div className={post.fImgLink? 'post-image':'hidden'}>
+                                    <div className={post.fImgLink? 'x-post-image-vign':'hidden'}>
                                             {/* <img id={post.fId} src={feedImageUrl(post.fId, post.fImgLink)} alt=''/> */}
                                             <img id={post.fId} src={post.fImgLink} width='100%' alt=''/>
                                             {/* <img id={post.fId} src="https://firebasestorage.googleapis.com/v0/b/feeds-db.appspot…hop.jpg?alt=media&token=224e9865-0964-42de-ac63-06231639ed0c" alt=''/> */}
@@ -96,7 +100,56 @@ const Posts =(props) =>{
                                     :
                                     null
                                 }
+                                {/* Done experimental css */}
+                                <div className='x-bottom'>
+                                    <div className='x-like'>
+                                        {/* <span>it</span> */}
+                                        <span className='pointer click-animation'>Like</span>
+                                    </div>
+                                    <span className='x-post-timestamp'>{post.fUpdated}</span>
+                                </div>
+                                {
+                                    post.fLink ?
+                                    (
+                                        <div className='x-top x-post-author-div'>
+                                            <span>Shared Post</span>
+                                        </div>
+                                    )
+                                    :
+                                    null
+                                }
                             </div>
+                            // <div key={post.fId} className={`${post.fImgLink? 'post-large':'post-small'} post`}>
+                            //     <div className='post-info'>
+                            //         <div className='post-writer'>
+                            //             <span style={{textTransform:'capitalize'}}>{post.feederName}</span>
+                            //             <div className={post.fLink? '': 'hidden'}>
+                            //                 <button className='post-button pointer click-animation'
+                            //                     onClick={()=> window.open(post.fLink, '_blank')}
+                            //                 >
+                            //                     Post
+                            //                 </button>
+                            //             </div>
+                            //         </div>
+                            //         <span className='post-timestamp'>{post.fUpdated}</span>
+                            //     </div>
+                            //     <p>{post.fTitle}
+                            //         {/* <hr/> */}
+                            //     </p>
+                            //     {/* <span style={{fontSize:'0.8rem'}}>{post.fBrief}</span> */}
+                            //     <hr style={{width:'80%', color:'rgba(235, 235, 235, 0.5)'}} 
+                            //         className={post.fImgLink? '':'hidden'}/>
+                            //     {
+                            //         post.fImgLink ? 
+                            //             <div className={post.fImgLink? 'post-image':'hidden'}>
+                            //                 {/* <img id={post.fId} src={feedImageUrl(post.fId, post.fImgLink)} alt=''/> */}
+                            //                 <img id={post.fId} src={post.fImgLink} width='100%' alt=''/>
+                            //                 {/* <img id={post.fId} src="https://firebasestorage.googleapis.com/v0/b/feeds-db.appspot…hop.jpg?alt=media&token=224e9865-0964-42de-ac63-06231639ed0c" alt=''/> */}
+                            //             </div>
+                            //         :
+                            //         null
+                            //     }
+                            // </div>
                         )
                     })
                 )
