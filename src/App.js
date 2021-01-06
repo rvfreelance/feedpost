@@ -16,9 +16,9 @@ function App() {
   const { width } = WindowDimension();
 
   return(
-    <ErrorBoundary>
+    // <ErrorBoundary>
       <ActualApp width={width}/>
-    </ErrorBoundary>
+    // </ErrorBoundary>
   )
 }
 

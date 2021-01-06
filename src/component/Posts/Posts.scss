@@ -276,32 +276,32 @@ hr{
     // box-shadow: 0px -2px 5px grey;
 
     .x-like{
-        display: flex;
+        overflow: hidden;
+        display: inline-block;
         padding: 5px 30px;
         // background-color: yellow;
-        // width: 20px;
+        // width: 0px;
         .heart-svg{
             width: 50px;
+            // background-color: pink;
             // height: 250px;
             // display: flex;
             // align-items: flex-start;
             background: none;
-            .svg-love{
-                // width: 100%;
-                // height: auto;
-                transform-origin:left;
-                scale:(0.09);
+            svg{
+                transform-origin: left;
+                scale:0.9;
                 fill: none;
-                animation: fill-love 0.2s ease-in-out 0s forwards normal;
-                
+
                 &:hover{
                     fill: rgba(238, 68, 96, 0.178);
                 }
             }
+            .svg-love{
+                animation: fill-love 0.3s ease-in-out 0s forwards normal;
+                
+            }
             .svg-no-love{
-                transform-origin:left;
-                scale:(0.09);
-                fill: none;
                 animation: remove-love 0.3s ease-in-out 0s forwards normal;    
             }
             // background-color: yellow;
