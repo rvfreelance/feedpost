@@ -306,8 +306,14 @@ hr{
             // align-items: start;
             // z-index: 2;
         }        
+    }
+    .x-like-count{
+        position: absolute;
+        bottom: 5px;
+        left: 70px;
         span{
             font-size: 0.8rem;    
+            color:rgb(201, 201, 201);
         }
     }
 
@@ -358,6 +364,7 @@ hr{
     border-radius: 15px;
     // padding: 0 20px;
     outline: none;
+    background-color: rgba(75, 75, 75, 0.1);
     color: rgb(238, 68, 96);
     &:hover{
         // position: absolute;

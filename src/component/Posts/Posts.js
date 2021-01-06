@@ -176,6 +176,19 @@ const Posts =(props) =>{
                                             
                                         }
                                     </div>
+                                    {/* {
+                                        lovedPosts.includes(post.fId) ?
+                                    } */}
+                                    <div className={`x-like-count ${lovedPosts.includes(post.fId)? '': 'hidden'}`}>
+                                        {
+                                            
+                                            post.fLoved.length>2 ?
+                                            <span>{post.fLoved.length}+</span>
+                                            :
+                                            <span>You loved it!</span>
+                                        }
+                                        {/* <span>100+</span> */}
+                                    </div>
                                 </div>
                                 
                                 

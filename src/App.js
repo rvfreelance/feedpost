@@ -53,7 +53,7 @@ class ActualApp extends React.Component{
       // console.log('data docs fetched: ', data.docs); 
       if(data.docs.length){
         data.docs.forEach(doc=>{
-          console.log(doc.id, doc.data());
+          // console.log(doc.id, doc.data());
           feedsDb.push(
             {
               'fId': doc.id,
@@ -62,6 +62,7 @@ class ActualApp extends React.Component{
               'fImgLink': doc.data().f_image, 
               'fLink': doc.data().f_link,
               'fIsAuthor': doc.data().f_is_author,
+              'fLoved': doc.data().f_loved,
               'fUpdated': doc.data().f_updated.toDate().toDateString(),
               'feederName': doc.data().feeder_name,
               'feederImgLink': doc.data().feeder_img,
@@ -87,7 +88,7 @@ class ActualApp extends React.Component{
     }).catch(error=>{
         this.setState({ refreshPosts: false });
         // setRefreshPosts(false);
-        console.log(error)
+        // console.log(error)
     })
   }
 
@@ -191,6 +192,7 @@ class ActualApp extends React.Component{
                 img={img}
                 setPosts={setPosts}
                 posts={posts}
+                width={width}
               />
             )
             : null

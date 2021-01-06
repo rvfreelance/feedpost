@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PostBig from '../../assets/svg/post_big.svg';
-import WindowDimension from '../WindowDimension/WindowDimension';
+// import WindowDimension from '../WindowDimension/WindowDimension';
 import HideArrow from '../../assets/svg/hide_arrow.svg';
 
 import './Create.scss';
@@ -70,25 +70,28 @@ const ImageUpload =(props) =>{
 
 const Create=(props) =>{
     const [image, setImage] = useState(null);
-    const [postTitle, setPostTitle] = useState(null);
-    const [postBrief, setPostBrief] = useState(null);
-    const [postLink, setPostLink] = useState(null);
+    const [postTitle, setPostTitle] = useState('');
+    const [postBrief, setPostBrief] = useState('');
+    const [postLink, setPostLink] = useState('');
     const [isAuthor, setIsAuthor] = useState(false);
 
-    const { width } = WindowDimension();
+    const { width } = props;
+
     let feeds =[];
     const FeedIn =() =>{
-        firestore.collection('/feeds').add({
-            'f_title': postTitle,
-            'f_brief': postBrief,
-            'f_link': postLink,
-            'f_is_author': isAuthor, 
-            'f_image': image,
-            'f_updated': firestoreTimestamp,
-            'feeder_name': props.name,
-            'feeder_uid': props.uid,
-            'feeder_img': props.img
-        })
+        if(postTitle.length && props.uid!==null){
+            firestore.collection('/feeds').add({
+                'f_title': postTitle,
+                'f_brief': postBrief,
+                'f_link': postLink,
+                'f_is_author': isAuthor, 
+                'f_image': image,
+                'f_loved': [],
+                'f_updated': firestoreTimestamp,
+                'feeder_name': props.name,
+                'feeder_uid': props.uid,
+                'feeder_img': props.img
+            })
             .then(feed=>{
                 // console.log(feed.id);
                 props.setAddFeed(false);
@@ -103,14 +106,15 @@ const Create=(props) =>{
                             'fLink': doc.data().f_link,
                             'fIsAuthor': doc.data().f_is_author,
                             'fImage': doc.data().f_image,
+                            'fLoved': doc.data().f_loved,
                             'fUpdated': doc.data().f_updated.toDate().toDateString(),
                             'feederName': doc.data().feeder_name,
                             'feederImg': doc.data().feeder_img,
                             'feederUid': doc.data().feeder_uid
                         });
-
+    
                         feeds = [...feeds, ...props.posts];
-
+    
                         props.setPosts(feeds);
                     }).catch(error=>{
                         console.log(error)
@@ -118,7 +122,9 @@ const Create=(props) =>{
             }).catch(error=>{
                 console.log('Something went wrong. Error: C-C-93')
             })
-        // props.setAddFeed(false);
+        }else{
+            return null;
+        }
     }
     return(
         <div className='create-feed'>
@@ -154,10 +160,15 @@ const Create=(props) =>{
                                 placeholder='Link to published post'
                                 onChange={(e)=>setPostLink(e.target.value)}
                             />
-                            <div className={`flex-sa-c ${postLink.length? '':'hidden'}`}>
-                                <input style={{width:'20%'}} type='checkbox' checked={isAuthor} onChange={e=>setIsAuthor(e.target.checked)}/>
-                                <span style={{fontSize:'0.8rem'}}>I am the author of the linked post</span>
-                            </div>
+                            {
+                                postLink.length? 
+                                    <div className='flex-sa-c'>
+                                        <input style={{width:'20%'}} type='checkbox' checked={isAuthor} onChange={e=>setIsAuthor(e.target.checked)}/>
+                                        <span style={{fontSize:'0.8rem'}}>I am the author of the linked post</span>
+                                    </div>
+                                    :
+                                    null
+                            }
                         </div>
                         <ImageUpload setImage={setImage} image={image}/>
                         {/* <label className="custom-file-upload">
