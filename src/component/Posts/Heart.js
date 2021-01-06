@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 
 const Heart =(props) =>{
-    const [lovestate, setLovestate ] = useState(false);
+    const [lovestate, setLovestate ] = useState(props.currentStatus);
     return(
         <div className='heart-svg'>
-
             <svg width="393" className={`pointer ${lovestate? 'svg-love':'svg-no-love'}`} height="293" xmlns="http://www.w3.org/2000/svg" 
-                // onClick={()=>props.handleLove(props.postId, !props.love)}   
-                onClick={()=>setLovestate(!lovestate)} 
-                xmlSpace='preserve'
+                onClick={()=>{props.handleLove(props.postId, !lovestate); setLovestate(!lovestate)}}
+                // xmlSpace='preserve'
             >
                 {/* <g>
                 <g display="none" overflow="hidden" y="0" x="0" height="10%" width="10%" id="canvasGrid">

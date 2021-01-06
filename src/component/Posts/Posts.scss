@@ -282,12 +282,12 @@ hr{
         // background-color: yellow;
         // width: 0px;
         .heart-svg{
-            width: 50px;
+            // width: 50px;
             // background-color: pink;
             // height: 250px;
             // display: flex;
             // align-items: flex-start;
-            background: none;
+            // background: none;
             svg{
                 transform-origin: left;
                 scale:0.9;
@@ -296,13 +296,6 @@ hr{
                 &:hover{
                     fill: rgba(238, 68, 96, 0.178);
                 }
-            }
-            .svg-love{
-                animation: fill-love 0.3s ease-in-out 0s forwards normal;
-                
-            }
-            .svg-no-love{
-                animation: remove-love 0.3s ease-in-out 0s forwards normal;    
             }
             // background-color: yellow;
             // max-width: 100%;
@@ -318,6 +311,14 @@ hr{
         }
     }
 
+}
+
+.svg-love{
+    animation: fill-love 0.3s ease-in-out 0s forwards normal;
+    
+}
+.svg-no-love{
+    animation: remove-love 0.3s ease-in-out 0s forwards normal;    
 }
 
 @keyframes fill-love{

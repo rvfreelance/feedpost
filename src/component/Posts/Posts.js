@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import WorldPost from '../../assets/svg/world_post.svg';
 import Loading from '../Loading/Loading';
-import { storage } from '../../firebase/firebase';
-// import Heart from '../../assets/svg/heart.svg';
+// import { storage } from '../../firebase/firebase';
+import HeartSvg from '../../assets/svg/heart.svg';
+import HeartSvgFilled from '../../assets/svg/heart_filled.svg';
+
 import Heart from './Heart';
 
 import './Posts.scss';
 
 
 const Posts =(props) =>{
-    const { posts, noShow, loginStatus, setFilteredPosts, filteredPosts, searchValue, setSearchValue } = props;
+    const { posts, width,  noShow, loginStatus, setFilteredPosts, filteredPosts, searchValue, setSearchValue } = props;
     // const [love, setLove] = useState([]);
     const [lovedPosts, setLovedPosts] = useState([]);
     const renderPosts = () =>{
@@ -22,8 +24,10 @@ const Posts =(props) =>{
     }
 
     const LovedPosts =(id, status) =>{
+        console.log('postid: ', id, ', status: ', status);
+
         if(status){
-            setLovedPosts(...lovedPosts, id);
+            setLovedPosts([...lovedPosts, id]);
         }else{
             const filter = lovedPosts.filter(item=>{
                 return( item!==id)
@@ -37,17 +41,18 @@ const Posts =(props) =>{
     // })
 
     // console.log('LovedPosts: ', LovedPosts)
-    const provideLoveStatus =(id) =>{
-        if(lovedPosts.length){
-            const filter = lovedPosts.filter(item=>{
-                return(item!== id)
-            })
-            console.log('provideLoveStatus filter: ', filter);
-            return id===filter[0];
-        }else{
-            return false
-        }
-    }
+    // const provideLoveStatus =(id) =>{
+    //     console.log(lovedPosts.length);
+    //     if(lovedPosts.length){
+    //         const filter = lovedPosts.filter(item=>{
+    //             return(item!== id)
+    //         })
+    //         console.log('provideLoveStatus filter: ', filter);
+    //         return id===filter[0];
+    //     }else{
+    //         return false
+    //     }
+    // }
 
     //Give <img/> their image url for the respective posts
     // const feedImageUrl =(feedId, link) =>{
@@ -148,9 +153,28 @@ const Posts =(props) =>{
                                 {/* Done experimental css */}
                                 <div className='x-bottom'>
                                     <div className='x-like'>
-                                        {/* <span>it</span> */}
-                                        <Heart love={provideLoveStatus(post.fId)} handleLove={LovedPosts} postId={post.fId}/>
-                                        {/* <img className='pointer click-animation' src={Heart} width='20px' alt='like the post'/> */}
+                                        {
+                                            width>=800 ? 
+                                            (
+                                                <Heart currentStatus={lovedPosts.includes(post.fId)} handleLove={LovedPosts} postId={post.fId}/>
+                                            )
+                                            :
+                                            lovedPosts.includes(post.fId) ?
+                                            <img className='pointer click-animation' 
+                                                src={HeartSvgFilled} 
+                                                width='35px' 
+                                                alt="didn't like the post"
+                                                onClick={()=>LovedPosts(post.fId, false)}
+                                            />
+                                            :
+                                            <img className='pointer click-animation' 
+                                                src={HeartSvg} 
+                                                width='35px' 
+                                                alt='like the post'
+                                                onClick={()=>LovedPosts(post.fId, true)}
+                                            />
+                                            
+                                        }
                                     </div>
                                 </div>
                                 
