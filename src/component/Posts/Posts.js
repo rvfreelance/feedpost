@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import WorldPost from '../../assets/svg/world_post.svg';
 import Loading from '../Loading/Loading';
 import { storage } from '../../firebase/firebase';
+// import Heart from '../../assets/svg/heart.svg';
+import Heart from './Heart';
 
 import './Posts.scss';
 
 
 const Posts =(props) =>{
     const { posts, noShow, loginStatus, setFilteredPosts, filteredPosts, searchValue, setSearchValue } = props;
+    // const [love, setLove] = useState([]);
+    const [lovedPosts, setLovedPosts] = useState([]);
     const renderPosts = () =>{
         if(searchValue.length){
             return filteredPosts;
@@ -17,17 +21,57 @@ const Posts =(props) =>{
         }
     }
 
-    //Give <img/> their image url for the respective posts
-    const feedImageUrl =(feedId, link) =>{
-        console.log(feedId, link);
-        storage.refFromURL(link)
-            .getDownloadURL()
-            .then(url=>{
-                console.log('feedId: ', feedId, ', link: ', link, ', URL: ', url);
-                return url;
+    const LovedPosts =(id, status) =>{
+        if(status){
+            setLovedPosts(...lovedPosts, id);
+        }else{
+            const filter = lovedPosts.filter(item=>{
+                return( item!==id)
             })
-            .catch(error=>console.log(error))
-    } 
+            setLovedPosts(filter);
+        }
+    };  
+    
+    // LovedPosts= love.forEach(obj=>{
+    //     return obj.postId
+    // })
+
+    // console.log('LovedPosts: ', LovedPosts)
+    const provideLoveStatus =(id) =>{
+        if(lovedPosts.length){
+            const filter = lovedPosts.filter(item=>{
+                return(item!== id)
+            })
+            console.log('provideLoveStatus filter: ', filter);
+            return id===filter[0];
+        }else{
+            return false
+        }
+    }
+
+    //Give <img/> their image url for the respective posts
+    // const feedImageUrl =(feedId, link) =>{
+    //     console.log(feedId, link);
+    //     storage.refFromURL(link)
+    //         .getDownloadURL()
+    //         .then(url=>{
+    //             console.log('feedId: ', feedId, ', link: ', link, ', URL: ', url);
+    //             return url;
+    //         })
+    //         .catch(error=>console.log(error))
+    // } 
+
+    // const handleLove =(postId, now) =>{
+    //     if(now){
+    //         setLove(...love, { 'postId': postId, 'loveState': now})
+    //     }else{
+    //         const filter = love.filter(obj=>{
+    //             return( obj.postId!== postId )
+    //         });
+    //         setLove(filter);
+    //     }
+    // }
+    
 
     // const replaceUrl =() =>{
         // let img = document.getElementById('138TbZThBVAhEY2WDpwT');
@@ -56,10 +100,10 @@ const Posts =(props) =>{
                     <span>Showing results for <strong><em>{searchValue}</em></strong></span>
                     :
                     <span>No results to show for <strong><em>{searchValue}</em></strong></span>
-
-                :
-                null
-            }
+                    
+                    :
+                    null
+                }
 
             {
                 posts.length? 
@@ -67,6 +111,7 @@ const Posts =(props) =>{
                     renderPosts().map(post=>{
                         return(
                             <div key={post.fId} className={`${post.fImgLink? 'x-post-large':'x-post-small'} x-post`}>
+                                <span className='x-post-timestamp'>{post.fUpdated}</span>
                                 <div className='x-post-info'>
                                     <div className='x-post-writer'>
                                         <span style={{textTransform:'capitalize'}}>{post.feederName}</span>
@@ -104,15 +149,17 @@ const Posts =(props) =>{
                                 <div className='x-bottom'>
                                     <div className='x-like'>
                                         {/* <span>it</span> */}
-                                        <span className='pointer click-animation'>Like</span>
+                                        <Heart love={provideLoveStatus(post.fId)} handleLove={LovedPosts} postId={post.fId}/>
+                                        {/* <img className='pointer click-animation' src={Heart} width='20px' alt='like the post'/> */}
                                     </div>
-                                    <span className='x-post-timestamp'>{post.fUpdated}</span>
                                 </div>
+                                
+                                
                                 {
                                     post.fLink ?
                                     (
-                                        <div className='x-top x-post-author-div'>
-                                            <span>Shared Post</span>
+                                        <div className={`x-top ${post.fIsAuthor? 'x-post-author-div':''}`}>
+                                            <span>{post.fIsAuthor? 'Author':'Shared Post'}</span>
                                         </div>
                                     )
                                     :

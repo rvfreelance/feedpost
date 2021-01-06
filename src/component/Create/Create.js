@@ -72,7 +72,8 @@ const Create=(props) =>{
     const [image, setImage] = useState(null);
     const [postTitle, setPostTitle] = useState(null);
     const [postBrief, setPostBrief] = useState(null);
-    const [postLink, setPostLink] =useState(null);
+    const [postLink, setPostLink] = useState(null);
+    const [isAuthor, setIsAuthor] = useState(false);
 
     const { width } = WindowDimension();
     let feeds =[];
@@ -81,6 +82,7 @@ const Create=(props) =>{
             'f_title': postTitle,
             'f_brief': postBrief,
             'f_link': postLink,
+            'f_is_author': isAuthor, 
             'f_image': image,
             'f_updated': firestoreTimestamp,
             'feeder_name': props.name,
@@ -99,6 +101,7 @@ const Create=(props) =>{
                             'fTitle': doc.data().f_title,
                             'fBrief': doc.data().f_brief,
                             'fLink': doc.data().f_link,
+                            'fIsAuthor': doc.data().f_is_author,
                             'fImage': doc.data().f_image,
                             'fUpdated': doc.data().f_updated.toDate().toDateString(),
                             'feederName': doc.data().feeder_name,
@@ -129,25 +132,32 @@ const Create=(props) =>{
                 </div> */}
                 {/* <PostBig width='500px' /> */}
                 <form id='create-post-form' onSubmit={(e)=>{e.preventDefault(); FeedIn()}}>
-                    <span id='feed-title' className={width>600? 'hidden': ''} style={{paddingTop:'50px'}}>feed in</span>
+                    {/* <span id='feed-title' className={width>600? 'hidden': ''} style={{paddingTop:'50px'}}>feed in</span> */}
                     <div className='onebytwo pbtm40'>
                         <div className='grid-row-full'>
                             <input 
                                 type='text'
+                                value={postTitle}
                                 placeholder='Post title'
                                 onChange={(e)=>setPostTitle(e.target.value)}
                                 required
                             />
                             <input 
                                 type='text'
+                                value={postBrief}
                                 placeholder='Brief description'
                                 onChange={(e)=>setPostBrief(e.target.value)}
                             />
                             <input 
                                 type='url'
+                                value={postLink}
                                 placeholder='Link to published post'
                                 onChange={(e)=>setPostLink(e.target.value)}
                             />
+                            <div className={`flex-sa-c ${postLink.length? '':'hidden'}`}>
+                                <input style={{width:'20%'}} type='checkbox' checked={isAuthor} onChange={e=>setIsAuthor(e.target.checked)}/>
+                                <span style={{fontSize:'0.8rem'}}>I am the author of the linked post</span>
+                            </div>
                         </div>
                         <ImageUpload setImage={setImage} image={image}/>
                         {/* <label className="custom-file-upload">

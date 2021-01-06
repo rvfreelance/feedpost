@@ -217,7 +217,7 @@ hr{
 
 .x-top{
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     position: absolute;
     height: 15px;
     top: 120px;
@@ -251,6 +251,7 @@ hr{
     }
 }
 
+
 .x-post-author-div{
     background-color: rgba(238, 68, 96, 0.178);
     span{
@@ -278,18 +279,67 @@ hr{
         display: flex;
         padding: 5px 30px;
         // background-color: yellow;
-        
+        // width: 20px;
+        .heart-svg{
+            width: 50px;
+            // height: 250px;
+            // display: flex;
+            // align-items: flex-start;
+            background: none;
+            .svg-love{
+                // width: 100%;
+                // height: auto;
+                transform-origin:left;
+                scale:(0.09);
+                fill: none;
+                animation: fill-love 0.2s ease-in-out 0s forwards normal;
+                
+                &:hover{
+                    fill: rgba(238, 68, 96, 0.178);
+                }
+            }
+            .svg-no-love{
+                transform-origin:left;
+                scale:(0.09);
+                fill: none;
+                animation: remove-love 0.3s ease-in-out 0s forwards normal;    
+            }
+            // background-color: yellow;
+            // max-width: 100%;
+            // position: absolute;
+            // top:0;
+            // display: flex;
+            // justify-content: center;
+            // align-items: start;
+            // z-index: 2;
+        }        
         span{
             font-size: 0.8rem;    
         }
     }
 
-    .x-post-timestamp{
-        // background-color: yellowgreen;
-        font-size: 0.8rem;
-        padding: 0px 20px;
-        color:rgb(201, 201, 201);
-    }
+}
+
+@keyframes fill-love{
+    0%{scale:0.1; fill: none;}
+    25%{scale:0.09; fill: #ee4460;opacity: 0.7;}
+    50%{scale:0.1; fill: #ee4460; opacity: 0.7;}
+    100%{scale:0.09; fill: #ee4460;opacity: 1;}
+}
+@keyframes remove-love{
+    0%{scale:0.08; fill: #ee4460;}
+    50%{scale:0.08; fill: none; opacity: 0.7;}
+    75%{scale:0.1; fill: none; opacity: 0.7;}
+    100%{scale:0.09; fill: none; opacity: 1;}
+}
+.x-post-timestamp{
+    position: absolute;
+    top:20px; 
+    right: 20px;
+    // background-color: yellowgreen;
+    font-size: 0.8rem;
+    // padding: 0px 20px;
+    color:rgb(201, 201, 201);
 }
 
 .x-post-button{

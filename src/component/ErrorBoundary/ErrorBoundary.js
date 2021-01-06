@@ -2,6 +2,7 @@ import React from 'react';
 
 import ErrorImg from '../../assets/svg/error.svg';
 import { firestore, firestoreTimestamp } from '../../firebase/firebase';
+// import WindowDimension from '../WindowDimension/WindowDimension';
 
 import './ErrorBoundary.scss';
 

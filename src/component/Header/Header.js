@@ -1,10 +1,12 @@
 import React from 'react';
 
 import { auth } from '../../firebase/firebase';
+// import WindowDimension from '../WindowDimension/WindowDimension';
 
 import './Header.scss';
 
 const Header =(props)=>{
+    // const { width } = WindowDimension();
     
     const handleClick =(button) =>{
 
