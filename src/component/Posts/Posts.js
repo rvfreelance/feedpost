@@ -289,7 +289,7 @@ const Posts =(props) =>{
                         <div>
                             <span style={{fontSize:'2rem'}}>Let the world see what you post!</span>
                             <br/><br/><br/>
-                            <button className='post-button' 
+                            <button className='x-post-button' 
                                 style={{fontSize:'2.5rem', boxShadow:'0px 0px 15px white'}}
                                 onClick={()=>{
                                     if(props.loginStatus){

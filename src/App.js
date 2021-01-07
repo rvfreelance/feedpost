@@ -8,7 +8,7 @@ import Login from './component/Login/Login';
 import ErrorBoundary from './component/ErrorBoundary/ErrorBoundary';
 
 import ReloadSvg from './assets/svg/reload.svg';
-import { firestore } from './firebase/firebase';
+import { firestore, auth } from './firebase/firebase';
 
 import WindowDimension from './component/WindowDimension/WindowDimension';
 
@@ -140,13 +140,13 @@ class ActualApp extends React.Component{
   render() {
     // const width  = Width();
     const { width } = this.props;
-
+    
     const { loginStatus, loginPop, addFeed, userName, uid, img, posts, lovebytes, refreshPosts, error, 
       filteredPosts, searchValue, noShow } = this.state;
-
+      
     const { FetchAllPosts, setLoginStatus, setLoginPop, setAddFeed, setName, setUid, setImg, setPosts, setRefreshPosts, setError, 
       setFilteredPosts, setSearchValue, setLovebytes } = this;
-  
+
     return (
       <div className="App">
         <Header 
@@ -214,7 +214,7 @@ class ActualApp extends React.Component{
             searchValue={searchValue}
             setSearchValue={setSearchValue}
           />
-          <div className={`${width<=800 ? 'bottom-fixed-bg':''} ${loginPop || addFeed? 'hidden':''}`}>
+          <div className={`${width<=800 ? 'bottom-fixed-bg':''} ${!loginStatus || loginPop || addFeed? 'hidden':''}`}>
             {
               loginStatus && !addFeed ? 
               ( 

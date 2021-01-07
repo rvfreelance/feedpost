@@ -84,7 +84,7 @@ const Create=(props) =>{
                 'f_title': postTitle,
                 'f_brief': postBrief,
                 'f_link': postLink,
-                'f_is_author': isAuthor, 
+                'f_is_author': postLink.length? isAuthor: true, 
                 'f_image': image,
                 'f_loved': [],
                 'f_updated': firestoreTimestamp,

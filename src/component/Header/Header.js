@@ -7,7 +7,7 @@ import './Header.scss';
 
 const Header =(props)=>{
     // const { width } = WindowDimension();
-    
+
     const handleClick =(button) =>{
 
         if(button==='logout'){

@@ -1,10 +1,118 @@
 import React from 'react';
 import Modal from '../Modal/Modal';
 
-import { auth, firestore, firestoreTimestamp } from '../../firebase/firebase';
+import { auth, firestore, firestoreTimestamp, signInWithGoogle } from '../../firebase/firebase';
 
 import './Login.scss';
+import Loading from '../Loading/Loading';
 
+const LoginEmailForm =(props) =>{
+    const { formStyling, inputStyling, email, password, handleSignIn, handleEmailChange, loginMethodGoogle,
+        handlePasswordChange, handleToggle, register, invalidEmailPassword, selectedLoginMethod, 
+        handleLoginMethod } = props;
+
+    return(
+        <form 
+        onSubmit={(e)=>{e.preventDefault()}}
+        id='login-modal'
+        className={register? 'slide-left':'slide-right'}
+        style={formStyling}
+        >
+            <span className='login-card-title'>Login</span>
+            {
+                selectedLoginMethod ? 
+                    loginMethodGoogle ?
+                        <div>
+                            <span>Login in with Google</span>
+                            <Loading />
+                        </div>
+                        :
+                        (
+                            <div>
+                                <div style={{display:'flex', flexDirection:'column'}}>
+                                    <div style={{height:'20px'}}>
+                                        <span className={invalidEmailPassword? '':'hidden'} style={{fontSize:'0.8rem', fontWeight:'600', color:'orangered'}}>Incorrect email or password</span>
+                                    </div>
+                                    <input 
+                                        style={inputStyling}
+                                        type='email'
+                                        placeholder='Email'
+                                        value={email}
+                                        onChange={(e)=>{handleEmailChange(e)}}
+                                        autoFocus
+                                        />
+                                    <input 
+                                        style={inputStyling}
+                                        type='password'
+                                        value={password}
+                                        placeholder='Password'
+                                        onChange={(e)=>{handlePasswordChange(e)}}
+                                    />
+                                </div>
+                                <div style={{
+                                    // backgroundColor:'pink',
+                                    display:'flex', 
+                                    flexDirection:'column', 
+                                    justifyContent:'space-between', 
+                                    alignItems:'center',
+                                    paddingBottom:'10px'
+                                    }}
+                                >
+                                    <button 
+                                        type='submit'
+                                        className='post-button login-button pointer' 
+                                        // style={{marginBottom:'50px'}}
+                                        disabled={email.length && password.length ? false:true}
+                                        onClick={()=>handleSignIn()}
+                                        >
+                                            Login
+                                    </button>
+                                    
+                                </div>
+                            </div>
+                        )
+                    :
+                    <div>
+                        Select Login Method
+                        <br/>
+                        <br/>
+                        <br/>
+                        <button className='x-post-button' 
+                            style={{color:'#4b4b4b'}} 
+                            onClick={()=>handleLoginMethod(false)}
+                        >
+                            Email
+                        </button>
+                        <button className='x-post-button' 
+                            onClick={()=>{handleLoginMethod(true); signInWithGoogle();}}
+                        >
+                            Google
+                        </button>
+                    </div>
+                
+            }
+            <div style={{ 
+                position: 'absolute', 
+                bottom: '10px', 
+                width:'100%',
+                display:'flex',
+                justifyContent:'center'
+                }}
+            >
+                <span style={{fontSize:'0.8rem'}}>Not registered yet?&nbsp;
+                    <span style={{
+                        // textDecoration:'underline', 
+                        color:'rgb(106, 106, 248)', 
+                        cursor:'pointer'}}
+                        onClick={()=>handleToggle(true)}
+                        >
+                        Register
+                    </span>
+                </span>
+            </div>
+        </form>
+    )
+}
 // const Login =(props) =>{
 
 class Login extends React.Component{
@@ -17,6 +125,8 @@ class Login extends React.Component{
             register: false,
             name: '',
             uid: null,
+            selectedLoginMethod: false,
+            loginMethodGoogle: false,
         }
     }
     // const [incorrect, setIncorrect] = useState(false);
@@ -26,6 +136,32 @@ class Login extends React.Component{
     // const [name, setName] = useState('');
     // const [uid, setUid] = useState(null);
 
+    handleEmailChange =(e) =>{
+        this.setState({ 
+            email: e.target.value, 
+            invalidEmailPassword: false
+        })
+    }
+    handlePasswordChange =(e) =>{
+        this.setState({ 
+            password: e.target.value, 
+            invalidEmailPassword: false
+        })
+    }
+    handleLoginMethod =(loginBool) =>{
+        this.setState({ 
+            loginMethodGoogle: loginBool, 
+            selectedLoginMethod: true 
+        })
+    }
+
+    handleToggle =(bool) =>{
+        this.setState({ 
+            register: bool, 
+            selectedLoginMethod: false,
+            loginMethodGoogle:false 
+        })
+    }
     
 
     handleSignIn =() =>{ 
@@ -109,7 +245,7 @@ class Login extends React.Component{
     }
 
     render(){
-        const { email, password, name, register, invalidEmailPassword } = this.state;
+        const { email, password, name, register, invalidEmailPassword, selectedLoginMethod, loginMethodGoogle } = this.state;
     
         const inputStyling ={
             padding:'10px 20px',
@@ -124,7 +260,7 @@ class Login extends React.Component{
             display:'grid', 
             gridTemplateRows:'repeat(1fr)', 
             width:'300px', 
-            height:'90%', 
+            height:'500px', 
             backgroundColor:'white', 
             border:'2px solid grey', 
             alignSelf:'center', 
@@ -136,64 +272,21 @@ class Login extends React.Component{
                 <div style={{height:'100%', display:'flex', justifyContent:'center'}}>
                     
                     {/* Login Form */}
-                    <form 
-                        onSubmit={(e)=>{e.preventDefault()}}
-                        id='login-modal'
-                        className={register? 'slide-left':'slide-right'}
-                        style={formStyling}
-                    >
-                        <span className='login-card-title'>Login</span>
-                        
-                        <div style={{display:'flex', flexDirection:'column'}}>
-                            <div style={{height:'20px'}}>
-                                <span className={invalidEmailPassword? '':'hidden'} style={{fontSize:'0.8rem', fontWeight:'600', color:'orangered'}}>Incorrect email or password</span>
-                            </div>
-                            <input 
-                                style={inputStyling}
-                                type='email'
-                                placeholder='Email'
-                                value={email}
-                                onChange={(e)=>{this.setState({ email: e.target.value, invalidEmailPassword: false})}}
-                                autoFocus
-                                />
-                            <input 
-                                style={inputStyling}
-                                type='password'
-                                value={password}
-                                placeholder='Password'
-                                onChange={(e)=>{this.setState({ password: e.target.value, invalidEmailPassword: false})}}
-                            />
-                        </div>
-                        <div style={{
-                            // backgroundColor:'pink',
-                            display:'flex', 
-                            flexDirection:'column', 
-                            justifyContent:'space-between', 
-                            alignItems:'center',
-                            paddingBottom:'10px'
-                            }}
-                        >
-                            <button 
-                                type='submit'
-                                className='post-button login-button pointer' 
-                                // style={{marginBottom:'50px'}}
-                                disabled={email.length && password.length ? false:true}
-                                onClick={()=>this.handleSignIn()}
-                                >
-                                    Login
-                            </button>
-                            <span style={{fontSize:'0.8rem'}}>Not registered yet?&nbsp;
-                                <span style={{
-                                    // textDecoration:'underline', 
-                                    color:'rgb(106, 106, 248)', 
-                                    cursor:'pointer'}}
-                                    onClick={()=>this.setState({register: true})}
-                                    >
-                                    Register
-                                </span>
-                            </span>
-                        </div>
-                    </form>
+                    <LoginEmailForm 
+                        email={email}
+                        password={password}
+                        handleSignIn={this.handleSignIn}
+                        handleEmailChange={this.handleEmailChange}
+                        handlePasswordChange={this.handlePasswordChange}
+                        handleToggle={this.handleToggle}
+                        inputStyling={inputStyling}
+                        formStyling={formStyling}
+                        invalidEmailPassword={invalidEmailPassword}
+                        register={register}
+                        selectedLoginMethod={selectedLoginMethod}
+                        loginMethodGoogle={loginMethodGoogle}
+                        handleLoginMethod={this.handleLoginMethod}
+                    />
                     
                     {/* Register Form*/}
                     <form onSubmit={(e)=>e.preventDefault()} className={register? 'slide-in': 'slide-out'} style={formStyling}>
