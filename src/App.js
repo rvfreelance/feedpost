@@ -34,6 +34,7 @@ class ActualApp extends React.Component{
       uid: null,
       img: null,
       posts: [],
+      lovebytes:[],
       refreshPosts: false,
       error: false,
       filteredPosts: [],
@@ -53,7 +54,7 @@ class ActualApp extends React.Component{
       // console.log('data docs fetched: ', data.docs); 
       if(data.docs.length){
         data.docs.forEach(doc=>{
-          // console.log(doc.id, doc.data());
+          console.log(doc.id, doc.data());
           feedsDb.push(
             {
               'fId': doc.id,
@@ -108,6 +109,7 @@ class ActualApp extends React.Component{
     this.setState({ userName })
   }
 
+  
   setUid =(uid) =>{
     this.setState({ uid })
   }
@@ -136,6 +138,10 @@ class ActualApp extends React.Component{
     this.setState({ searchValue: value })
   } 
 
+  // inititalize once lovebytes & offLovebytes(offline Lovebytes)
+  setLovebytes =(arr) =>{
+    this.setState({ lovebytes: arr})
+  }
   // setNoShow =(bool) =>{
   //   this.setState({ noShow: bool })
   // }
@@ -144,11 +150,11 @@ class ActualApp extends React.Component{
     // const width  = Width();
     const { width } = this.props;
 
-    const { loginStatus, loginPop, addFeed, userName, uid, img, posts, refreshPosts, error, 
+    const { loginStatus, loginPop, addFeed, userName, uid, img, posts, lovebytes, refreshPosts, error, 
       filteredPosts, searchValue, noShow } = this.state;
 
     const { FetchAllPosts, setLoginStatus, setLoginPop, setAddFeed, setName, setUid, setImg, setPosts, setRefreshPosts, setError, 
-      setFilteredPosts, setSearchValue } = this;
+      setFilteredPosts, setSearchValue, setLovebytes } = this;
   
     return (
       <div className="App">
@@ -160,6 +166,7 @@ class ActualApp extends React.Component{
           setName={setName}
           setUid={setUid}
           error={error}
+          setLovebytes={setLovebytes}
           // width={width}
         />
   
@@ -174,6 +181,7 @@ class ActualApp extends React.Component{
               <Login 
                 setLoginStatus={setLoginStatus}
                 setLoginPop={setLoginPop}
+                setLovebytes={setLovebytes}
                 fetchPosts={FetchAllPosts}
                 setName={setName}
                 setUid={setUid}
@@ -198,7 +206,10 @@ class ActualApp extends React.Component{
             : null
           }
           <Posts 
+            uid={uid}
             posts={posts}
+            lovebytes={lovebytes}
+            setLovebytes={setLovebytes}
             setPosts={setPosts}
             setAddFeed={setAddFeed}
             refreshPosts={refreshPosts}

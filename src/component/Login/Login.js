@@ -37,6 +37,8 @@ class Login extends React.Component{
                     firestore.doc(`/feeders/${this.state.uid}`).get()
                         .then(doc=>{ 
                             this.setState({name: doc.data().name}, ()=>{
+                                console.log('lovebytes: ', doc.data().lovebytes);
+                                this.props.setLovebytes(doc.data().lovebytes);
                                 this.props.setName(doc.data().name);
                                 this.props.setUid(doc.data().uid);
                                 this.props.setLoginStatus(true);
@@ -70,10 +72,12 @@ class Login extends React.Component{
                 name: name,
                 joined: firestoreTimestamp,
                 uid: data.user.uid,
-                org: null
+                org: null,
+                lovebytes: []
             }).then(()=>{
                 // console.log("feeder registration successfull!");
                 this.setState({ email: '', password: ''}, ()=>{
+                    // this.props.setLovebytes([]);
                     this.props.setName(name);
                     this.props.setUid(data.user.uid);
                     this.props.setLoginStatus(true);

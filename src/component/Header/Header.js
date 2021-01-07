@@ -12,6 +12,7 @@ const Header =(props)=>{
 
         if(button==='logout'){
             auth.signOut().then(()=>{
+                props.setLovebytes([]);
                 props.setPosts([]);
                 props.setName('');
                 props.setUid(null);

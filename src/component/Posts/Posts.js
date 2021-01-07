@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
-import WorldPost from '../../assets/svg/world_post.svg';
 import Loading from '../Loading/Loading';
-// import { storage } from '../../firebase/firebase';
+import Heart from './Heart';
+
 import HeartSvg from '../../assets/svg/heart.svg';
 import HeartSvgFilled from '../../assets/svg/heart_filled.svg';
+import WorldPost from '../../assets/svg/world_post.svg';
 
-import Heart from './Heart';
+import firebase, { firestore } from '../../firebase/firebase';
 
 import './Posts.scss';
 
 
 const Posts =(props) =>{
-    const { posts, width,  noShow, loginStatus, setFilteredPosts, filteredPosts, searchValue, setSearchValue } = props;
-    // const [love, setLove] = useState([]);
-    const [lovedPosts, setLovedPosts] = useState([]);
+    const { posts, width, lovebytes, setLovebytes,  noShow, loginStatus, setFilteredPosts, filteredPosts, searchValue, setSearchValue } = props;
+    // const [lovedPosts, setLovedPosts] = useState([]);
+    const [difficultyBanner, setDifficultyBanner] = useState(false);
+
     const renderPosts = () =>{
         if(searchValue.length){
             return filteredPosts;
@@ -24,35 +26,92 @@ const Posts =(props) =>{
     }
 
     const LovedPosts =(id, status) =>{
-        console.log('postid: ', id, ', status: ', status);
 
-        if(status){
-            setLovedPosts([...lovedPosts, id]);
+        const feedRef = firestore.doc(`/feeds/${id}`);
+        const uidRef = firestore.doc(`/feeders/${props.uid}`);
+        // console.log(uidRef);
+        console.log('postid: ', id, ', status: ', status);
+        if(props.uid!==null){
+            //check if only the posts which are not there gets added to the array 
+            if(status && !lovebytes.includes(id)){
+                
+                //create a batch write to update lovebytes and f_loved arrays
+                let batchAdd = firestore.batch();
+                //update lovebytes in feeders
+                batchAdd.update(uidRef, {
+                    lovebytes: firebase.firestore.FieldValue.arrayUnion(id)
+                });
+                //update f_loved in feeds
+                batchAdd.update(feedRef, {
+                    f_loved: firebase.firestore.FieldValue.arrayUnion(props.uid)
+                })
+                //commit batch update
+                batchAdd.commit().then(()=>{
+                    console.log('added id: ', id);
+                    setLovebytes([...lovebytes, id]);
+                }).catch(error=>console.log('failed in batchAdd: ', error))
+
+                // uidRef.update({
+                //     lovebytes: firebase.firestore.FieldValue.arrayUnion(id)
+                // })
+                // .then(()=>{
+                //     console.log('added id: ', id);
+                //     setLovebytes([...lovebytes, id]);
+                // })
+                // .catch((error)=>{
+                //     console.log(error);
+                //     setDifficultyBanner(true);
+                // })
+            
+            }else{
+                //create a batch write to update lovebytes and f_loved arrays
+                let batchRem = firestore.batch();
+                //update lovebytes in feeders
+                batchRem.update(uidRef, {
+                    lovebytes: firebase.firestore.FieldValue.arrayRemove(id)
+                });
+                //update f_loved in feeds
+                batchRem.update(feedRef, {
+                    f_loved: firebase.firestore.FieldValue.arrayRemove(props.uid)
+                })
+                //commit batch update
+                batchRem.commit().then(()=>{
+                    const filter = lovebytes.filter(item=>{
+                        return( item!==id)
+                    })
+                    console.log('removed id: ', id);
+                    setLovebytes(filter);
+                }).catch(error=>console.log('failed in batchRem: ', error))
+
+                // uidRef.update({
+                //     lovebytes: firebase.firestore.FieldValue.arrayRemove(id)
+                // })
+                // .then(()=>{
+                //     console.log('removed id: ', id);
+                //     setLovebytes(filter);
+                // })
+                // .catch((error)=>{
+                //     console.log(error);
+                //     setDifficultyBanner(true)
+                // })
+            }
         }else{
-            const filter = lovedPosts.filter(item=>{
-                return( item!==id)
-            })
-            setLovedPosts(filter);
+            return null;
         }
     };  
     
-    // LovedPosts= love.forEach(obj=>{
-    //     return obj.postId
-    // })
-
-    // console.log('LovedPosts: ', LovedPosts)
-    // const provideLoveStatus =(id) =>{
-    //     console.log(lovedPosts.length);
-    //     if(lovedPosts.length){
-    //         const filter = lovedPosts.filter(item=>{
-    //             return(item!== id)
-    //         })
-    //         console.log('provideLoveStatus filter: ', filter);
-    //         return id===filter[0];
-    //     }else{
-    //         return false
+    // useEffect(()=>{
+    //     const LoveBytes =() =>{
+    //         if(props.uid!==null && lovedPosts){
+    //             firestore.doc(`/feeders/${props.uid}`).update({
+    //                 f_loved: firestore.FieldValue.arrayUnion
+    //             })
+    //         }
     //     }
-    // }
+
+    //     LoveBytes();
+    // }, [lovedPosts])
+
 
     //Give <img/> their image url for the respective posts
     // const feedImageUrl =(feedId, link) =>{
@@ -66,17 +125,6 @@ const Posts =(props) =>{
     //         .catch(error=>console.log(error))
     // } 
 
-    // const handleLove =(postId, now) =>{
-    //     if(now){
-    //         setLove(...love, { 'postId': postId, 'loveState': now})
-    //     }else{
-    //         const filter = love.filter(obj=>{
-    //             return( obj.postId!== postId )
-    //         });
-    //         setLove(filter);
-    //     }
-    // }
-    
 
     // const replaceUrl =() =>{
         // let img = document.getElementById('138TbZThBVAhEY2WDpwT');
@@ -85,6 +133,11 @@ const Posts =(props) =>{
 
     return(
         <div className={`posts ${props.width<=800? 'pb-90':''}`}>
+            <div className={`transparent ${difficultyBanner? 'difficulty': 'difficulty'}`}
+                onAnimationEnd={()=>setDifficultyBanner(false)}    
+            >
+                <span>Unable to connect</span>
+            </div>
             {
                 loginStatus? 
                     <SearchBar 
@@ -156,10 +209,10 @@ const Posts =(props) =>{
                                         {
                                             width>=800 ? 
                                             (
-                                                <Heart currentStatus={lovedPosts.includes(post.fId)} handleLove={LovedPosts} postId={post.fId}/>
+                                                <Heart currentStatus={lovebytes.includes(post.fId)} handleLove={LovedPosts} postId={post.fId}/>
                                             )
                                             :
-                                            lovedPosts.includes(post.fId) ?
+                                            lovebytes.includes(post.fId) ?
                                             <img className='pointer click-animation' 
                                                 src={HeartSvgFilled} 
                                                 width='35px' 
@@ -179,11 +232,11 @@ const Posts =(props) =>{
                                     {/* {
                                         lovedPosts.includes(post.fId) ?
                                     } */}
-                                    <div className={`x-like-count ${lovedPosts.includes(post.fId)? '': 'hidden'}`}>
+                                    <div className={`x-like-count ${lovebytes.includes(post.fId)? '': 'hidden'}`}>
                                         {
                                             
                                             post.fLoved.length>2 ?
-                                            <span>{post.fLoved.length}+</span>
+                                            <span>{post.fLoved.includes(props.uid) ? post.fLoved.length-1 : post.fLoved.length}+</span>
                                             :
                                             <span>You loved it!</span>
                                         }
