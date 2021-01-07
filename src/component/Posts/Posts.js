@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import Loading from '../Loading/Loading';
 import Heart from './Heart';
@@ -29,8 +29,8 @@ const Posts =(props) =>{
 
         const feedRef = firestore.doc(`/feeds/${id}`);
         const uidRef = firestore.doc(`/feeders/${props.uid}`);
-        // console.log(uidRef);
-        console.log('postid: ', id, ', status: ', status);
+        // //console.log(uidRef);
+        // //console.log('postid: ', id, ', status: ', status);
         if(props.uid!==null){
             //check if only the posts which are not there gets added to the array 
             if(status && !lovebytes.includes(id)){
@@ -47,22 +47,13 @@ const Posts =(props) =>{
                 })
                 //commit batch update
                 batchAdd.commit().then(()=>{
-                    console.log('added id: ', id);
+                    // //console.log('added id: ', id);
                     setLovebytes([...lovebytes, id]);
-                }).catch(error=>console.log('failed in batchAdd: ', error))
+                }).catch(error=>{
+                        setDifficultyBanner(true);
+                    //console.log('failed in batchAdd: ', error)
+                })
 
-                // uidRef.update({
-                //     lovebytes: firebase.firestore.FieldValue.arrayUnion(id)
-                // })
-                // .then(()=>{
-                //     console.log('added id: ', id);
-                //     setLovebytes([...lovebytes, id]);
-                // })
-                // .catch((error)=>{
-                //     console.log(error);
-                //     setDifficultyBanner(true);
-                // })
-            
             }else{
                 //create a batch write to update lovebytes and f_loved arrays
                 let batchRem = firestore.batch();
@@ -79,23 +70,15 @@ const Posts =(props) =>{
                     const filter = lovebytes.filter(item=>{
                         return( item!==id)
                     })
-                    console.log('removed id: ', id);
+                    // //console.log('removed id: ', id);
                     setLovebytes(filter);
-                }).catch(error=>console.log('failed in batchRem: ', error))
-
-                // uidRef.update({
-                //     lovebytes: firebase.firestore.FieldValue.arrayRemove(id)
-                // })
-                // .then(()=>{
-                //     console.log('removed id: ', id);
-                //     setLovebytes(filter);
-                // })
-                // .catch((error)=>{
-                //     console.log(error);
-                //     setDifficultyBanner(true)
-                // })
+                }).catch(error=>{
+                    setDifficultyBanner(true);
+                    //console.log('failed in batchRem: ', error)
+                })
             }
         }else{
+            setDifficultyBanner(true);
             return null;
         }
     };  
@@ -115,14 +98,16 @@ const Posts =(props) =>{
 
     //Give <img/> their image url for the respective posts
     // const feedImageUrl =(feedId, link) =>{
-    //     console.log(feedId, link);
+    //     //console.log(feedId, link);
     //     storage.refFromURL(link)
     //         .getDownloadURL()
     //         .then(url=>{
-    //             console.log('feedId: ', feedId, ', link: ', link, ', URL: ', url);
+    //             //console.log('feedId: ', feedId, ', link: ', link, ', URL: ', url);
     //             return url;
     //         })
-    //         .catch(error=>console.log(error))
+    //         .catch(error=>{
+                    //console.log(error)
+                // })
     // } 
 
 
@@ -133,7 +118,7 @@ const Posts =(props) =>{
 
     return(
         <div className={`posts ${props.width<=800? 'pb-90':''}`}>
-            <div className={`transparent ${difficultyBanner? 'difficulty': 'difficulty'}`}
+            <div className={`transparent ${difficultyBanner? 'difficulty': ''}`}
                 onAnimationEnd={()=>setDifficultyBanner(false)}    
             >
                 <span>Unable to connect</span>
@@ -189,7 +174,7 @@ const Posts =(props) =>{
                                     </div>
                                     {/* <hr/> */}
                                 </div>
-                                {/* experimentalcss looks good */}
+                                {/* experimental css looks good */}
                                 {/* <span style={{fontSize:'0.8rem'}}>{post.fBrief}</span> */}
                                 <hr style={{width:'80%', color:'rgba(235, 235, 235, 0.5)'}} 
                                     className={post.fImgLink? '':'hidden'}/>

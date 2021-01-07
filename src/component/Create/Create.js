@@ -93,7 +93,7 @@ const Create=(props) =>{
                 'feeder_img': props.img
             })
             .then(feed=>{
-                // console.log(feed.id);
+                // //console.log(feed.id);
                 props.setAddFeed(false);
                 
                 //fetch the feed from firebase and add to current list
@@ -117,10 +117,10 @@ const Create=(props) =>{
     
                         props.setPosts(feeds);
                     }).catch(error=>{
-                        console.log(error)
+                        //console.log(error)
                     })
             }).catch(error=>{
-                console.log('Something went wrong. Error: C-C-93')
+                //console.log('Something went wrong. Error: C-C-93')
             })
         }else{
             return null;

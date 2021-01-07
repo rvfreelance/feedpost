@@ -37,7 +37,7 @@ class Login extends React.Component{
                     firestore.doc(`/feeders/${this.state.uid}`).get()
                         .then(doc=>{ 
                             this.setState({name: doc.data().name}, ()=>{
-                                console.log('lovebytes: ', doc.data().lovebytes);
+                                //console.log('lovebytes: ', doc.data().lovebytes);
                                 this.props.setLovebytes(doc.data().lovebytes);
                                 this.props.setName(doc.data().name);
                                 this.props.setUid(doc.data().uid);
@@ -49,25 +49,25 @@ class Login extends React.Component{
                     
                 });
                 // setPassword('');
-                // console.log(data.user.uid);
+                // //console.log(data.user.uid);
             })
             .catch((error)=>{
                 if(error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found'){
-                    // console.log(error.code);
+                    // //console.log(error.code);
                     this.setState({ invalidEmailPassword: true })
                 }else if(error.code === 'auth/too-many-requests'){
                     alert("Your account has been temporarily disabled, try again after some time!")
                 }else if(error.code === 'auth/network-request-failed'){
                     alert("Network connectivity issue. Kindly check your internet connection.")
                 }
-                // console.log(error)
+                // //console.log(error)
             })
     }
 
     handleRegister =() =>{
         const { email, password, name } = this.state;
         auth.createUserWithEmailAndPassword(email, password).then((data)=>{
-            // console.log(data.user.uid);
+            // //console.log(data.user.uid);
             firestore.collection('/feeders').doc(data.user.uid).set({
                 name: name,
                 joined: firestoreTimestamp,
@@ -75,7 +75,7 @@ class Login extends React.Component{
                 org: null,
                 lovebytes: []
             }).then(()=>{
-                // console.log("feeder registration successfull!");
+                // //console.log("feeder registration successfull!");
                 this.setState({ email: '', password: ''}, ()=>{
                     // this.props.setLovebytes([]);
                     this.props.setName(name);
@@ -86,7 +86,7 @@ class Login extends React.Component{
                 })              
             })
         }).catch(error=>{
-            console.log(error)
+            //console.log(error)
             if(error.code === 'auth/network-request-failed'){
                 alert("Network connectivity issue. Kindly check your internet connection.")
             }else if(error.code === 'auth/email-already-in-use'){
@@ -97,9 +97,13 @@ class Login extends React.Component{
                     'error_info': error.message,
                     'error_logged': firestoreTimestamp,
                     'email': email,
-                }).then(()=>console.log('Error successfully logged.'))
-                .catch(()=>console.log('Unable to log error.'));
-                // console.log(error)
+                }).then(()=>{
+                    //console.log('Error successfully logged.')
+                })
+                .catch((error)=>{
+                    //console.log('Unable to log error.')
+                });
+                // //console.log(error)
             }
         })
     }
