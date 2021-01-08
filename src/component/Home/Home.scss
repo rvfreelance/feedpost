@@ -1,0 +1,35 @@
+.home{
+    overflow: hidden;
+    // padding: 10px;
+}
+
+.full-screen{
+    width: 100vw;
+    height: 110vh;
+    background-color: white;
+
+    .screen1-txt{
+        font-size: 3rem;
+    }
+
+    // .animation{
+    //     display: flex;
+    //     flex-direction: column;
+    //     justify-content: space-around;
+    // }
+}
+
+.feedpost{
+    // padding-left: 30px;
+    font-family: 'Qwigley', cursive;
+    font-size: 5rem;
+    font-weight: 600;
+}
+
+@media only screen and (max-width: 600px){
+    .full-screen{
+        .screen1-txt{
+            font-size: 2rem;
+        }
+    }
+}
