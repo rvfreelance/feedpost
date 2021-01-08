@@ -4,20 +4,38 @@ import './App.css';
 import Header from './component/Header/Header';
 import Posts from './component/Posts/Posts';
 import Create from './component/Create/Create';
+import Home from './component/Home/Home';
 import Login from './component/Login/Login';
 import ErrorBoundary from './component/ErrorBoundary/ErrorBoundary';
 
 import ReloadSvg from './assets/svg/reload.svg';
-import { firestore, auth } from './firebase/firebase';
+import { firestore, auth, createUserProfileDocument } from './firebase/firebase';
 
 import WindowDimension from './component/WindowDimension/WindowDimension';
 
 function App() {
+  // const [ currentUser, setCurrentUser ] = useState(null);
+
   const { width } = WindowDimension();
+  
+  // let unsubscribeFromAuth = null;
+
+  // useEffect(()=>{
+
+  //   unsubscribeFromAuth = auth.onAuthStateChanged(user=>{
+  //     setCurrentUser(user)
+  //     console.log(user);
+  //   })
+
+  //   return ()=>{
+  //     unsubscribeFromAuth();
+  //   }
+  // }, [])
+
 
   return(
     // <ErrorBoundary>
-      <ActualApp width={width}/>
+      <ActualApp width={width} />
     // </ErrorBoundary>
   )
 }
@@ -40,6 +58,8 @@ class ActualApp extends React.Component{
       filteredPosts: [],
       searchValue: '',
       noShow: false,
+
+      currentUser: null,
     }
   }
 
@@ -137,12 +157,76 @@ class ActualApp extends React.Component{
     this.setState({ lovebytes: arr})
   }
 
+  // componentDidUpdate =(prevProps) =>{
+  //   if(this.props.currentUser !== prevProps.currentUser){ 
+  //     if(this.props.currentUser){
+  //       this.setState({ 
+  //         loginPop: false,
+  //         loginStatus: true,
+  //         uid: this.props.currentUser.uid,
+  //         userName: this.props.currentUser.displayName
+  //       })
+  //     }else{
+  //       this.setState({
+  //         loginPop: true,
+  //         loginStatus: false,
+  //         uid: null,
+  //         userName: '',
+  //         lovebytes:[],
+  //         posts: []
+  //       })
+  //     }
+  //   }
+  // }
+  
+  unsubscribeFromAuth = null;
+
+  componentDidMount =() =>{
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth =>{
+      if(userAuth){
+        const userRef = await createUserProfileDocument(userAuth)
+        userRef.get().then(doc => {
+          this.setState({
+            currentUser: {
+              ...doc.data()
+            }
+          }, ()=>{
+            // console.log(this.state.currentUser);
+            this.FetchAllPosts();
+            this.setState({
+              loginPop: false,
+              loginStatus: true,
+              uid: this.state.currentUser.uid,
+              lovebytes: this.state.currentUser.lovebytes,
+              userName: this.state.currentUser.name
+            })
+          })
+        })
+      }else{
+        this.setState({ 
+          currentUser: userAuth,
+          loginPop: true,
+          loginStatus: false,
+          uid: null,
+          lovebytes: [],
+          userName: '',
+          posts: [],
+          filteredPosts: []
+        })
+      }
+    })
+  }
+
+  componentWillUnmount =() =>{
+    this.unsubscribeFromAuth();
+  }
+
   render() {
     // const width  = Width();
     const { width } = this.props;
     
     const { loginStatus, loginPop, addFeed, userName, uid, img, posts, lovebytes, refreshPosts, error, 
-      filteredPosts, searchValue, noShow } = this.state;
+      filteredPosts, searchValue, noShow, currentUser } = this.state;
       
     const { FetchAllPosts, setLoginStatus, setLoginPop, setAddFeed, setName, setUid, setImg, setPosts, setRefreshPosts, setError, 
       setFilteredPosts, setSearchValue, setLovebytes } = this;
@@ -150,15 +234,15 @@ class ActualApp extends React.Component{
     return (
       <div className="App">
         <Header 
-          loginStatus={loginStatus}
-          setLoginStatus={setLoginStatus}
+          // loginStatus={loginStatus}
+          // setLoginStatus={setLoginStatus}
           setLoginPop={setLoginPop}
-          setPosts={setPosts}
-          setName={setName}
-          setUid={setUid}
+          // setPosts={setPosts}
+          // setName={setName}
+          // setUid={setUid}
           error={error}
-          setLovebytes={setLovebytes}
-          // width={width}
+          // setLovebytes={setLovebytes}
+          currentUser={currentUser}
         />
   
         <ErrorBoundary 
@@ -167,7 +251,7 @@ class ActualApp extends React.Component{
           uid={uid}
         >
           {
-            loginPop || (!loginStatus && addFeed)? 
+            loginPop || (!currentUser && addFeed)? 
             (
               <Login 
                 setLoginStatus={setLoginStatus}
@@ -182,7 +266,7 @@ class ActualApp extends React.Component{
             : null
           }
           {
-            loginStatus && addFeed?
+            currentUser && addFeed?
             (
               <Create 
                 setAddFeed={setAddFeed}
@@ -196,27 +280,38 @@ class ActualApp extends React.Component{
             )
             : null
           }
-          <Posts 
-            uid={uid}
-            posts={posts}
-            lovebytes={lovebytes}
-            setLovebytes={setLovebytes}
-            setPosts={setPosts}
-            setAddFeed={setAddFeed}
-            refreshPosts={refreshPosts}
-            setRefreshPosts={setRefreshPosts}
-            noShow={noShow}
-            width={width}
-            loginStatus={loginStatus}
-            setLoginPop={setLoginPop}
-            filteredPosts={filteredPosts}
-            setFilteredPosts={setFilteredPosts}
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-          />
-          <div className={`${width<=800 ? 'bottom-fixed-bg':''} ${!loginStatus || loginPop || addFeed? 'hidden':''}`}>
+          {
+            currentUser? 
+            (
+              <Posts 
+                uid={uid}
+                posts={posts}
+                lovebytes={lovebytes}
+                setLovebytes={setLovebytes}
+                setPosts={setPosts}
+                setAddFeed={setAddFeed}
+                refreshPosts={refreshPosts}
+                setRefreshPosts={setRefreshPosts}
+                noShow={noShow}
+                width={width}
+                loginStatus={loginStatus}
+                setLoginPop={setLoginPop}
+                filteredPosts={filteredPosts}
+                setFilteredPosts={setFilteredPosts}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+              />
+            )
+            :
+            <Home 
+              setAddFeed={setAddFeed}
+              setLoginPop={setLoginPop}
+              width={width}
+            />
+          }
+          <div className={`${width<=800 ? 'bottom-fixed-bg':''} ${!currentUser || loginPop || addFeed? 'hidden':''}`}>
             {
-              loginStatus && !addFeed ? 
+              currentUser && !addFeed ? 
               ( 
                 <>
                   <button className={`update-button click-animation pointer ${refreshPosts? 'rotate-infinite': ''}`}

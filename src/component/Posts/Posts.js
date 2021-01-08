@@ -5,7 +5,6 @@ import Heart from './Heart';
 
 import HeartSvg from '../../assets/svg/heart.svg';
 import HeartSvgFilled from '../../assets/svg/heart_filled.svg';
-import WorldPost from '../../assets/svg/world_post.svg';
 
 import firebase, { firestore } from '../../firebase/firebase';
 
@@ -13,7 +12,7 @@ import './Posts.scss';
 
 
 const Posts =(props) =>{
-    const { posts, width, lovebytes, setLovebytes,  noShow, loginStatus, setFilteredPosts, filteredPosts, searchValue, setSearchValue } = props;
+    const { posts, width, lovebytes, setLovebytes, loginStatus, setFilteredPosts, filteredPosts, searchValue, setSearchValue } = props;
     // const [lovedPosts, setLovedPosts] = useState([]);
     const [difficultyBanner, setDifficultyBanner] = useState(false);
 
@@ -154,7 +153,11 @@ const Posts =(props) =>{
                     renderPosts().map(post=>{
                         return(
                             <div key={post.fId} className={`${post.fImgLink? 'x-post-large':'x-post-small'} x-post`}>
+                                
+                                {/* timestamp */}
                                 <span className='x-post-timestamp'>{post.fUpdated}</span>
+                                
+                                {/* feeder info and also the embedded link if available */}
                                 <div className='x-post-info'>
                                     <div className='x-post-writer'>
                                         <span style={{textTransform:'capitalize'}}>{post.feederName}</span>
@@ -167,28 +170,28 @@ const Posts =(props) =>{
                                         </button>
                                     </div>
                                 </div>
+                                
+                                {/*post title and brief  */}
                                 <div className='x-post-desc'>
                                     <p className='x-post-title'>{post.fTitle}</p>
                                     <div className='x-post-brief'>
                                         <span>{post.fBrief}</span>
                                     </div>
-                                    {/* <hr/> */}
                                 </div>
-                                {/* experimental css looks good */}
-                                {/* <span style={{fontSize:'0.8rem'}}>{post.fBrief}</span> */}
                                 <hr style={{width:'80%', color:'rgba(235, 235, 235, 0.5)'}} 
                                     className={post.fImgLink? '':'hidden'}/>
+
+                                {/* post image included by the feeder if any */}
                                 {
                                     post.fImgLink ? 
-                                    <div className={post.fImgLink? 'x-post-image-vign':'hidden'}>
-                                            {/* <img id={post.fId} src={feedImageUrl(post.fId, post.fImgLink)} alt=''/> */}
+                                        <div className={post.fImgLink? 'x-post-image-vign':'hidden'}>  
                                             <img id={post.fId} src={post.fImgLink} width='100%' alt=''/>
-                                            {/* <img id={post.fId} src="https://firebasestorage.googleapis.com/v0/b/feeds-db.appspot…hop.jpg?alt=media&token=224e9865-0964-42de-ac63-06231639ed0c" alt=''/> */}
                                         </div>
                                     :
-                                    null
+                                        null
                                 }
-                                {/* Done experimental css */}
+
+                                {/* Bottom bar - heart button, count */}
                                 <div className='x-bottom'>
                                     <div className='x-like'>
                                         {
@@ -214,22 +217,35 @@ const Posts =(props) =>{
                                             
                                         }
                                     </div>
-                                    {/* {
-                                        lovedPosts.includes(post.fId) ?
-                                    } */}
+
+                                    {/* Heart Button total loved count */}
                                     <div className={`x-like-count ${lovebytes.includes(post.fId)? '': 'hidden'}`}>
                                         {
-                                            
+                                            post.fLoved.includes(props.uid) ?
+                                                //if floved includes uid thats why checking for +1
+                                                post.fLoved.length>1 ?
+                                                    <span>+{post.fLoved.length-1}</span>
+                                                :
+                                                    <span>You loved it!</span>
+                                            :
+                                                // if floved doesnot include uid
+                                                post.fLoved.length ?
+                                                    <span>+{post.fLoved.length}</span>
+                                                :
+                                                    <span>You loved it!</span>
+                                        }
+                                        
+                                        
+                                        {/* {   
                                             post.fLoved.length>2 ?
                                             <span>{post.fLoved.includes(props.uid) ? post.fLoved.length-1 : post.fLoved.length}+</span>
                                             :
                                             <span>You loved it!</span>
-                                        }
-                                        {/* <span>100+</span> */}
+                                        } */}
                                     </div>
                                 </div>
-                                
-                                
+
+                                {/* To see if the feeder is the author of the shared post */}
                                 {
                                     post.fLink ?
                                     (
@@ -241,77 +257,11 @@ const Posts =(props) =>{
                                     null
                                 }
                             </div>
-                            // <div key={post.fId} className={`${post.fImgLink? 'post-large':'post-small'} post`}>
-                            //     <div className='post-info'>
-                            //         <div className='post-writer'>
-                            //             <span style={{textTransform:'capitalize'}}>{post.feederName}</span>
-                            //             <div className={post.fLink? '': 'hidden'}>
-                            //                 <button className='post-button pointer click-animation'
-                            //                     onClick={()=> window.open(post.fLink, '_blank')}
-                            //                 >
-                            //                     Post
-                            //                 </button>
-                            //             </div>
-                            //         </div>
-                            //         <span className='post-timestamp'>{post.fUpdated}</span>
-                            //     </div>
-                            //     <p>{post.fTitle}
-                            //         {/* <hr/> */}
-                            //     </p>
-                            //     {/* <span style={{fontSize:'0.8rem'}}>{post.fBrief}</span> */}
-                            //     <hr style={{width:'80%', color:'rgba(235, 235, 235, 0.5)'}} 
-                            //         className={post.fImgLink? '':'hidden'}/>
-                            //     {
-                            //         post.fImgLink ? 
-                            //             <div className={post.fImgLink? 'post-image':'hidden'}>
-                            //                 {/* <img id={post.fId} src={feedImageUrl(post.fId, post.fImgLink)} alt=''/> */}
-                            //                 <img id={post.fId} src={post.fImgLink} width='100%' alt=''/>
-                            //                 {/* <img id={post.fId} src="https://firebasestorage.googleapis.com/v0/b/feeds-db.appspot…hop.jpg?alt=media&token=224e9865-0964-42de-ac63-06231639ed0c" alt=''/> */}
-                            //             </div>
-                            //         :
-                            //         null
-                            //     }
-                            // </div>
                         )
                     })
                 )
                 :
-                noShow || !props.loginStatus? 
-                (
-                    <div style={{
-                            width:'80%', 
-                            height:'80vh', 
-                            display:'flex', 
-                            alignItems:'center', 
-                            justifyContent: props.width>1000? 'space-between': 'center'
-                        }}
-                    >
-                        <div>
-                            <span style={{fontSize:'2rem'}}>Let the world see what you post!</span>
-                            <br/><br/><br/>
-                            <button className='x-post-button' 
-                                style={{fontSize:'2.5rem', boxShadow:'0px 0px 15px white'}}
-                                onClick={()=>{
-                                    if(props.loginStatus){
-                                        props.setAddFeed(true)
-                                    }else{
-                                        props.setLoginPop(true);
-                                        // props.setAddFeed(true);      
-                                    }
-                                }}
-                            >
-                                Add Post
-                            </button>
-                        </div>
-                        <img className={props.width>1000? '':'hidden'} 
-                            src={WorldPost} 
-                            width={props.width>1200? '500px': '350px'} 
-                            alt=''
-                        />
-                    </div>
-                ) 
-                :
-                <Loading />
+                <Loading height='70vh'/>
             }
         
         </div>

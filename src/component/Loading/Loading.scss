@@ -1,6 +1,6 @@
 .loading{
     width: 100%;
-    height: 78vh;
+    // height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,7 +16,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        border: 15px dotted white;
+        border: 20px solid white;
         // border-bottom-color:rgb(75, 75, 75) ;
         // box-shadow: 10px 0px 20px white;
         animation: scale2 1.7s ease-in-out infinite normal;
@@ -28,7 +28,7 @@
             font-weight: 900;
             // color: white;
 
-            animation: scale3 1.7s ease-in-out infinite reverse;
+            // animation: scale3 1.7s ease-in-out infinite reverse;
             
             .loading-pink{
                 color: rgb(238, 68, 96);
@@ -43,11 +43,11 @@
     0% { scale: 1;}
     25% {border-color: rgb(238, 68, 96) ;}
     50% {scale: 0.75; border-color: rgb(75, 75, 75);}
-    100% {scale:1; transform: rotate(360deg);}
+    100% {scale:1;}
 }
 
 @keyframes scale3{
     0% { scale:1;}
-    50% {scale:1.33;}
-    100% {scale:1; transform: rotate(360deg)}
+    50% {scale:1;}
+    100% {scale:1;}
 }

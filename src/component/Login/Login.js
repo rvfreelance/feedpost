@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from '../Modal/Modal';
 
-import { auth, firestore, firestoreTimestamp, signInWithGoogle } from '../../firebase/firebase';
+import { auth, firestore, signInWithGoogle, createUserProfileDocument } from '../../firebase/firebase';
 
 import './Login.scss';
 import Loading from '../Loading/Loading';
@@ -172,15 +172,15 @@ class Login extends React.Component{
                 this.setState({uid: data.user.uid}, ()=>{
                     firestore.doc(`/feeders/${this.state.uid}`).get()
                         .then(doc=>{ 
-                            this.setState({name: doc.data().name}, ()=>{
+                            this.setState({name: doc.data().name})
                                 //console.log('lovebytes: ', doc.data().lovebytes);
-                                this.props.setLovebytes(doc.data().lovebytes);
-                                this.props.setName(doc.data().name);
-                                this.props.setUid(doc.data().uid);
-                                this.props.setLoginStatus(true);
-                                this.props.fetchPosts();
-                                this.props.setLoginPop(false);
-                            }) 
+                                // this.props.setLovebytes(doc.data().lovebytes);
+                                // this.props.setName(doc.data().name);
+                                // this.props.setUid(doc.data().uid);
+                                // this.props.setLoginStatus(true);
+                                // this.props.fetchPosts();
+                                // this.props.setLoginPop(false);
+                            // }) 
                         })
                     
                 });
@@ -200,48 +200,98 @@ class Login extends React.Component{
             })
     }
 
-    handleRegister =() =>{
+    handleRegister = async(event) =>{
+        event.preventDefault();
+
         const { email, password, name } = this.state;
-        auth.createUserWithEmailAndPassword(email, password).then((data)=>{
-            // //console.log(data.user.uid);
-            firestore.collection('/feeders').doc(data.user.uid).set({
-                name: name,
-                joined: firestoreTimestamp,
-                uid: data.user.uid,
-                org: null,
-                lovebytes: []
-            }).then(()=>{
-                // //console.log("feeder registration successfull!");
-                this.setState({ email: '', password: ''}, ()=>{
-                    // this.props.setLovebytes([]);
-                    this.props.setName(name);
-                    this.props.setUid(data.user.uid);
-                    this.props.setLoginStatus(true);
-                    this.props.fetchPosts();  
-                    this.props.setLoginPop(false);
-                })              
+        
+        try{
+
+            const { user } = await auth.createUserWithEmailAndPassword(email, password)
+            // console.log('user: ', user);
+            const userAuthEdited = {
+                email: user.email,
+                uid: user.uid,
+                displayName: name
+            } 
+            // console.log(userAuthEdited);
+            // const { displayName } = userAuthEdited;
+            // console.log('display name: ', displayName);
+
+            await createUserProfileDocument(userAuthEdited);
+            this.setState({
+                invalidEmailPassword: false,
+                email:'',
+                password:'',
+                register: false,
+                name: '',
+                uid: null,
+                selectedLoginMethod: false,
+                loginMethodGoogle: false
             })
-        }).catch(error=>{
-            //console.log(error)
+
+        }catch(error){
             if(error.code === 'auth/network-request-failed'){
                 alert("Network connectivity issue. Kindly check your internet connection.")
             }else if(error.code === 'auth/email-already-in-use'){
                 alert("We are finding it difficult to register new users at the moment, kindly try again after some time");
             }else{
-                firestore.collection('/registrationErrors').add({
-                    'error': error.code,
-                    'error_info': error.message,
-                    'error_logged': firestoreTimestamp,
-                    'email': email,
-                }).then(()=>{
-                    //console.log('Error successfully logged.')
-                })
-                .catch((error)=>{
-                    //console.log('Unable to log error.')
-                });
+                console.log(error);
+                // firestore.collection('/registrationErrors').add({
+                //     'error': error.code,
+                //     'error_info': error.message,
+                //     'error_logged': firestoreTimestamp,
+                //     'email': email,
+                // }).then(()=>{
+                //     //console.log('Error successfully logged.')
+                // })
+                // .catch((error)=>{
+                //     //console.log('Unable to log error.')
+                // });
                 // //console.log(error)
             }
-        })
+        }
+        
+        // auth.createUserWithEmailAndPassword(email, password).then((data)=>{
+        //     // //console.log(data.user.uid);
+        //     firestore.collection('/feeders').doc(data.user.uid).set({
+        //         name: name,
+        //         joined: firestoreTimestamp,
+        //         uid: data.user.uid,
+        //         org: null,
+        //         lovebytes: []
+        //     }).then(()=>{
+        //         // //console.log("feeder registration successfull!");
+        //         this.setState({ email: '', password: ''}, ()=>{
+        //             // this.props.setLovebytes([]);
+        //             this.props.setName(name);
+        //             this.props.setUid(data.user.uid);
+        //             this.props.setLoginStatus(true);
+        //             this.props.fetchPosts();  
+        //             this.props.setLoginPop(false);
+        //         })              
+        //     })
+        // }).catch(error=>{
+        //     //console.log(error)
+        //     if(error.code === 'auth/network-request-failed'){
+        //         alert("Network connectivity issue. Kindly check your internet connection.")
+        //     }else if(error.code === 'auth/email-already-in-use'){
+        //         alert("We are finding it difficult to register new users at the moment, kindly try again after some time");
+        //     }else{
+        //         firestore.collection('/registrationErrors').add({
+        //             'error': error.code,
+        //             'error_info': error.message,
+        //             'error_logged': firestoreTimestamp,
+        //             'email': email,
+        //         }).then(()=>{
+        //             //console.log('Error successfully logged.')
+        //         })
+        //         .catch((error)=>{
+        //             //console.log('Unable to log error.')
+        //         });
+        //         // //console.log(error)
+        //     }
+        // })
     }
 
     render(){
@@ -334,7 +384,7 @@ class Login extends React.Component{
                                 type='submit'
                                 className='post-button login-button pointer'
                                 disabled={email.length && password.length>=6 && name.length? false:true}
-                                onClick={()=>this.handleRegister()}
+                                onClick={(e)=>this.handleRegister(e)}
                                 >
                                     Register now
                             </button>

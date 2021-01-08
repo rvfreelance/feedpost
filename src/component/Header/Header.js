@@ -1,30 +1,10 @@
 import React from 'react';
 
 import { auth } from '../../firebase/firebase';
-// import WindowDimension from '../WindowDimension/WindowDimension';
 
 import './Header.scss';
 
 const Header =(props)=>{
-    // const { width } = WindowDimension();
-
-    const handleClick =(button) =>{
-
-        if(button==='logout'){
-            auth.signOut().then(()=>{
-                props.setLovebytes([]);
-                props.setPosts([]);
-                props.setName('');
-                props.setUid(null);
-                props.setLoginStatus(false);
-                props.setLoginPop(true);
-            })
-        }else if(button==='login'){
-            props.setLoginPop(true);
-        }else{
-            return;
-        }
-    }
 
     return(
         <div className='header'>
@@ -39,13 +19,21 @@ const Header =(props)=>{
                     
                     {
                         props.error? null :
-                        props.loginStatus? 
+                        props.currentUser? 
                         (
-                            <li className='pm-12 pointer click-animation login' onClick={()=>{handleClick('logout');}}>Logout</li>
+                            <li className='pm-12 pointer click-animation login' 
+                                onClick={()=> auth.signOut()}
+                            >
+                                Logout
+                            </li>
                         )
                         :
                         (
-                            <li className='pm-12 pointer click-animation login' onClick={()=>{handleClick('login');}}>Login</li>
+                            <li className='pm-12 pointer click-animation login' 
+                                onClick={()=> props.setLoginPop(true)}
+                            >
+                                Login
+                            </li>
                         )
                     }
                 </ul>
