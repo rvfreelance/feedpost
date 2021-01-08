@@ -205,7 +205,7 @@ class ActualApp extends React.Component{
       }else{
         this.setState({ 
           currentUser: userAuth,
-          loginPop: true,
+          loginPop: false,
           loginStatus: false,
           uid: null,
           lovebytes: [],

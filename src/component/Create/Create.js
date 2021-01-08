@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import PostBig from '../../assets/svg/post_big.svg';
 // import WindowDimension from '../WindowDimension/WindowDimension';
 import HideArrow from '../../assets/svg/hide_arrow.svg';
+import Loading from '../Loading/Loading';
+import Notice from '../Notice/Notice';
 
 import './Create.scss';
 import { firestore, firestoreTimestamp } from '../../firebase/firebase';
@@ -74,6 +76,8 @@ const Create=(props) =>{
     const [postBrief, setPostBrief] = useState('');
     const [postLink, setPostLink] = useState('');
     const [isAuthor, setIsAuthor] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [noticeVisibility, setNoticeVisibility] = useState(false);
 
     const { width } = props;
 
@@ -116,10 +120,10 @@ const Create=(props) =>{
                         feeds = [...feeds, ...props.posts];
     
                         props.setPosts(feeds);
-                    }).catch(error=>{
-                        //console.log(error)
                     })
             }).catch(error=>{
+                setLoading(false);
+                setNoticeVisibility(true);
                 //console.log('Something went wrong. Error: C-C-93')
             })
         }else{
@@ -128,77 +132,99 @@ const Create=(props) =>{
     }
     return(
         <div className='create-feed'>
-            <button className='top-hide-button pointer' title='Hide'
-                onClick={()=>props.setAddFeed(false)}
-            >
-                <img className='animating-down-scale'src={HideArrow} width='40px' alt='hide button' />
-            </button>
-            <div className='create'>
-                {/* <div>
-                </div> */}
-                {/* <PostBig width='500px' /> */}
-                <form id='create-post-form' onSubmit={(e)=>{e.preventDefault(); FeedIn()}}>
-                    {/* <span id='feed-title' className={width>600? 'hidden': ''} style={{paddingTop:'50px'}}>feed in</span> */}
-                    <div className='onebytwo pbtm40'>
-                        <div className='grid-row-full'>
-                            <input 
-                                type='text'
-                                value={postTitle}
-                                placeholder='Post title'
-                                onChange={(e)=>setPostTitle(e.target.value)}
-                                required
-                            />
-                            <input 
-                                type='text'
-                                value={postBrief}
-                                placeholder='Brief description'
-                                onChange={(e)=>setPostBrief(e.target.value)}
-                            />
-                            <input 
-                                type='url'
-                                value={postLink}
-                                placeholder='Link to published post'
-                                onChange={(e)=>setPostLink(e.target.value)}
-                            />
-                            {
-                                postLink.length? 
-                                    <div className='flex-sa-c'>
-                                        <input style={{width:'20%'}} type='checkbox' checked={isAuthor} onChange={e=>setIsAuthor(e.target.checked)}/>
-                                        <span style={{fontSize:'0.8rem'}}>I am the author of the linked post</span>
-                                    </div>
-                                    :
-                                    null
-                            }
-                        </div>
-                        <ImageUpload setImage={setImage} image={image}/>
-                        {/* <label className="custom-file-upload">
-                            <input type="file" onChange={(e)=> this.handleChange(e)}/>
-                            <img
-                                className={this.state.file? '':'hidden'} 
-                                src={this.state.file} width="150px"
-                            />
-
-                            <div style={{display:'flex', justifyContent:'space-between', width:'150px'}}>
-                                <span className='custom-title'>{this.state.file? 'Change':'Add image'}</span>
-                                <span className={this.state.file? 'custom-title':'hidden'} onClick={(e)=>e.preventDefault()}>Remove</span>
-                            </div>
-                            <span style={{fontSize:'0.6rem', textDecoration:'none'}}>(.jpg/ .jpeg/ .png only)</span>
-                        </label> */}
-                    </div>
-                    <div>
-                        <button className='post-button feed-post pointer click-animation' 
-                            type='submit'    
+            
+            {
+                noticeVisibility? 
+                    <Notice notice={5} setVisibility={setNoticeVisibility} />
+                    :
+                    null
+            }
+            
+            { loading? 
+              
+                <Loading />
+                :
+                (
+                    <>
+                        <button className='top-hide-button pointer' title='Hide'
+                            onClick={()=>props.setAddFeed(false)}
                         >
-                            feedPost
+                            <img className='animating-down-scale'src={HideArrow} width='40px' alt='hide button' />
                         </button>
-                    </div>
-                </form>
-                <div className={width<=600 ? 'hidden': 'image-big'} >
-                    <span id='feed-title'>feed in</span>
-                    <img src={PostBig} width='300px' alt=''/>
-                </div>
+                        <div className='create'>
+                            {/* <div>
+                            </div> */}
+                            {/* <PostBig width='500px' /> */}
+                            <form id='create-post-form' onSubmit={(e)=>{
+                                    e.preventDefault(); 
+                                    setLoading(true); 
+                                    FeedIn()
+                                }}
+                            >
+                                {/* <span id='feed-title' className={width>600? 'hidden': ''} style={{paddingTop:'50px'}}>feed in</span> */}
+                                <div className='onebytwo pbtm40'>
+                                    <div className='grid-row-full'>
+                                        <input 
+                                            type='text'
+                                            value={postTitle}
+                                            placeholder='Post title'
+                                            onChange={(e)=>setPostTitle(e.target.value)}
+                                            required
+                                        />
+                                        <input 
+                                            type='text'
+                                            value={postBrief}
+                                            placeholder='Brief description'
+                                            onChange={(e)=>setPostBrief(e.target.value)}
+                                        />
+                                        <input 
+                                            type='url'
+                                            value={postLink}
+                                            placeholder='Link to published post'
+                                            onChange={(e)=>setPostLink(e.target.value)}
+                                        />
+                                        {
+                                            postLink.length? 
+                                                <div className='flex-sa-c'>
+                                                    <input style={{width:'20%'}} type='checkbox' checked={isAuthor} onChange={e=>setIsAuthor(e.target.checked)}/>
+                                                    <span style={{fontSize:'0.8rem'}}>I am the author of the linked post</span>
+                                                </div>
+                                                :
+                                                null
+                                        }
+                                    </div>
+                                    <ImageUpload setImage={setImage} image={image}/>
+                                    {/* <label className="custom-file-upload">
+                                        <input type="file" onChange={(e)=> this.handleChange(e)}/>
+                                        <img
+                                            className={this.state.file? '':'hidden'} 
+                                            src={this.state.file} width="150px"
+                                        />
 
-            </div>
+                                        <div style={{display:'flex', justifyContent:'space-between', width:'150px'}}>
+                                            <span className='custom-title'>{this.state.file? 'Change':'Add image'}</span>
+                                            <span className={this.state.file? 'custom-title':'hidden'} onClick={(e)=>e.preventDefault()}>Remove</span>
+                                        </div>
+                                        <span style={{fontSize:'0.6rem', textDecoration:'none'}}>(.jpg/ .jpeg/ .png only)</span>
+                                    </label> */}
+                                </div>
+                                <div>
+                                    <button className='post-button feed-post pointer click-animation' 
+                                        type='submit'    
+                                    >
+                                        feedPost
+                                    </button>
+                                </div>
+                            </form>
+                            <div className={width<=600 ? 'hidden': 'image-big'} >
+                                <span id='feed-title'>feed in</span>
+                                <img src={PostBig} width='300px' alt=''/>
+                            </div>
+
+                        </div>
+                    </>
+                )
+            }
         </div>
     )
 }

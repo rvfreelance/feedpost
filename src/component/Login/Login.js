@@ -1,15 +1,17 @@
 import React from 'react';
 import Modal from '../Modal/Modal';
 
-import { auth, firestore, signInWithGoogle, createUserProfileDocument } from '../../firebase/firebase';
+import Loading from '../Loading/Loading';
+import Notice from '../Notice/Notice'; 
+
+import { auth, firestore, firestoreTimestamp, signInWithGoogle, createUserProfileDocument } from '../../firebase/firebase';
 
 import './Login.scss';
-import Loading from '../Loading/Loading';
 
 const LoginEmailForm =(props) =>{
-    const { formStyling, inputStyling, email, password, handleSignIn, handleEmailChange, loginMethodGoogle,
-        handlePasswordChange, handleToggle, register, invalidEmailPassword, selectedLoginMethod, 
-        handleLoginMethod } = props;
+    const { formStyling, inputStyling, email, password, handleSignIn, handleChange, loginMethodGoogle,
+        handleToggle, register, invalidEmailPassword, selectedLoginMethod, 
+        handleLoginMethod, loading } = props;
 
     return(
         <form 
@@ -29,46 +31,57 @@ const LoginEmailForm =(props) =>{
                         :
                         (
                             <div>
-                                <div style={{display:'flex', flexDirection:'column'}}>
-                                    <div style={{height:'20px'}}>
-                                        <span className={invalidEmailPassword? '':'hidden'} style={{fontSize:'0.8rem', fontWeight:'600', color:'orangered'}}>Incorrect email or password</span>
-                                    </div>
-                                    <input 
-                                        style={inputStyling}
-                                        type='email'
-                                        placeholder='Email'
-                                        value={email}
-                                        onChange={(e)=>{handleEmailChange(e)}}
-                                        autoFocus
-                                        />
-                                    <input 
-                                        style={inputStyling}
-                                        type='password'
-                                        value={password}
-                                        placeholder='Password'
-                                        onChange={(e)=>{handlePasswordChange(e)}}
-                                    />
-                                </div>
-                                <div style={{
-                                    // backgroundColor:'pink',
-                                    display:'flex', 
-                                    flexDirection:'column', 
-                                    justifyContent:'space-between', 
-                                    alignItems:'center',
-                                    paddingBottom:'10px'
-                                    }}
-                                >
-                                    <button 
-                                        type='submit'
-                                        className='post-button login-button pointer' 
-                                        // style={{marginBottom:'50px'}}
-                                        disabled={email.length && password.length ? false:true}
-                                        onClick={()=>handleSignIn()}
-                                        >
-                                            Login
-                                    </button>
-                                    
-                                </div>
+                                {
+                                    loading? 
+                                        <Loading />
+                                        :
+                                        <>
+                                            <div style={{display:'flex', flexDirection:'column'}}>
+                                                <div style={{height:'20px'}}>
+                                                    <span className={invalidEmailPassword? '':'hidden'} style={{fontSize:'0.8rem', fontWeight:'600', color:'orangered'}}>Incorrect email or password</span>
+                                                </div>
+                                                <input 
+                                                    style={inputStyling}
+                                                    type='email'
+                                                    name='email'
+                                                    placeholder='Email'
+                                                    value={email}
+                                                    onChange={(e)=>{handleChange(e, 'login')}}
+                                                    autoFocus
+                                                    />
+                                                <input 
+                                                    style={inputStyling}
+                                                    type='password'
+                                                    name='password'
+                                                    value={password}
+                                                    placeholder='Password'
+                                                    onChange={(e)=>{handleChange(e, 'login')}}
+                                                />
+                                            </div>
+                                        
+                                            <div style={{
+                                                // backgroundColor:'pink',
+                                                display:'flex', 
+                                                flexDirection:'column', 
+                                                justifyContent:'space-between', 
+                                                alignItems:'center',
+                                                paddingBottom:'10px'
+                                                }}
+                                            >
+                                                <button 
+                                                    type='submit'
+                                                    className='post-button login-button pointer' 
+                                                    // style={{marginBottom:'50px'}}
+                                                    disabled={email.length && password.length ? false:true}
+                                                    onClick={()=>handleSignIn()}
+                                                    >
+                                                        Login
+                                                </button>
+                                                
+                                            </div>
+                                        </>
+                                }
+                                
                             </div>
                         )
                     :
@@ -78,12 +91,13 @@ const LoginEmailForm =(props) =>{
                         <br/>
                         <br/>
                         <button className='x-post-button' 
-                            style={{color:'#4b4b4b'}} 
+                            style={{color:'#4b4b4b', fontSize:'2.2rem'}} 
                             onClick={()=>handleLoginMethod(false)}
                         >
                             Email
                         </button>
                         <button className='x-post-button' 
+                            style={{fontSize:'2.2rem'}}
                             onClick={()=>{handleLoginMethod(true); signInWithGoogle();}}
                         >
                             Google
@@ -127,6 +141,9 @@ class Login extends React.Component{
             uid: null,
             selectedLoginMethod: false,
             loginMethodGoogle: false,
+            loading: false,
+            noticeMsg:null,
+            noticeVisibility: false,
         }
     }
     // const [incorrect, setIncorrect] = useState(false);
@@ -136,18 +153,18 @@ class Login extends React.Component{
     // const [name, setName] = useState('');
     // const [uid, setUid] = useState(null);
 
-    handleEmailChange =(e) =>{
-        this.setState({ 
-            email: e.target.value, 
-            invalidEmailPassword: false
-        })
+    handleChange =(e, form) =>{
+        const { name, value } = e.target;
+        if(form==='login'){
+            this.setState({ 
+                [name]: value,
+                invalidEmailPassword: false
+            })
+        }else {
+            this.setState({ [name]: value });
+        }
     }
-    handlePasswordChange =(e) =>{
-        this.setState({ 
-            password: e.target.value, 
-            invalidEmailPassword: false
-        })
-    }
+
     handleLoginMethod =(loginBool) =>{
         this.setState({ 
             loginMethodGoogle: loginBool, 
@@ -163,41 +180,49 @@ class Login extends React.Component{
         })
     }
     
+    handleNoticeVisibilty =(bool) =>{
+        this.setState({
+            notice: '',
+            noticeVisibility: bool
+        })
+    }
 
     handleSignIn =() =>{ 
         const { email, password } = this.state; 
 
-        auth.signInWithEmailAndPassword(email, password)
-            .then(data=>{
-                this.setState({uid: data.user.uid}, ()=>{
-                    firestore.doc(`/feeders/${this.state.uid}`).get()
-                        .then(doc=>{ 
-                            this.setState({name: doc.data().name})
-                                //console.log('lovebytes: ', doc.data().lovebytes);
-                                // this.props.setLovebytes(doc.data().lovebytes);
-                                // this.props.setName(doc.data().name);
-                                // this.props.setUid(doc.data().uid);
-                                // this.props.setLoginStatus(true);
-                                // this.props.fetchPosts();
-                                // this.props.setLoginPop(false);
-                            // }) 
-                        })
-                    
-                });
-                // setPassword('');
-                // //console.log(data.user.uid);
-            })
-            .catch((error)=>{
-                if(error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found'){
-                    // //console.log(error.code);
-                    this.setState({ invalidEmailPassword: true })
-                }else if(error.code === 'auth/too-many-requests'){
-                    alert("Your account has been temporarily disabled, try again after some time!")
-                }else if(error.code === 'auth/network-request-failed'){
-                    alert("Network connectivity issue. Kindly check your internet connection.")
-                }
-                // //console.log(error)
-            })
+        this.setState({
+            loading: true
+        }, ()=>{
+
+            //sign in with email password
+            auth.signInWithEmailAndPassword(email, password)
+                .catch((error)=>{
+                    this.setState({ loading: false}, () =>{
+                        if(error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found'){
+                            // //console.log(error.code);
+                            this.setState({ invalidEmailPassword: true })
+                        }else if(error.code === 'auth/too-many-requests'){
+                            this.setState({
+                                noticeMsg:3,
+                                noticeVisibility: true
+                            })
+                            // alert("Your account has been temporarily disabled, try again after some time!")
+                        }else if(error.code === 'auth/network-request-failed'){
+                            this.setState({
+                                noticeMsg:4,
+                                noticeVisibility: true
+                            })
+                            // alert("Network connectivity issue. Kindly check your internet connection.")
+                        }else{
+                            this.setState({
+                                noticeMsg:2,
+                                noticeVisibility: true
+                            })
+                        }
+                    })
+                    // //console.log(error)
+                })
+        })
     }
 
     handleRegister = async(event) =>{
@@ -208,15 +233,11 @@ class Login extends React.Component{
         try{
 
             const { user } = await auth.createUserWithEmailAndPassword(email, password)
-            // console.log('user: ', user);
             const userAuthEdited = {
                 email: user.email,
                 uid: user.uid,
                 displayName: name
             } 
-            // console.log(userAuthEdited);
-            // const { displayName } = userAuthEdited;
-            // console.log('display name: ', displayName);
 
             await createUserProfileDocument(userAuthEdited);
             this.setState({
@@ -232,70 +253,31 @@ class Login extends React.Component{
 
         }catch(error){
             if(error.code === 'auth/network-request-failed'){
-                alert("Network connectivity issue. Kindly check your internet connection.")
-            }else if(error.code === 'auth/email-already-in-use'){
-                alert("We are finding it difficult to register new users at the moment, kindly try again after some time");
+                this.setState({ noticeVisibility: true })
+                // alert("Network connectivity issue. Kindly check your internet connection.")
+            // }else if(error.code === 'auth/email-already-in-use'){
+            //     alert("We are finding it difficult to register new users at the moment, kindly try again after some time");
             }else{
-                console.log(error);
-                // firestore.collection('/registrationErrors').add({
-                //     'error': error.code,
-                //     'error_info': error.message,
-                //     'error_logged': firestoreTimestamp,
-                //     'email': email,
-                // }).then(()=>{
-                //     //console.log('Error successfully logged.')
-                // })
-                // .catch((error)=>{
-                //     //console.log('Unable to log error.')
-                // });
-                // //console.log(error)
+                // console.log(error);
+                this.setState({ noticeVisibility:true, noticeMsg:2})
+                firestore.collection('/registrationErrors').add({
+                    'error': error.code,
+                    'error_info': error.message,
+                    'error_logged': firestoreTimestamp,
+                    'email': email,
+                }).then(()=>{
+                    //console.log('Error successfully logged.')
+                })
+                .catch((error)=>{
+                    //console.log('Unable to log error.')
+                });
+                //console.log(error)
             }
         }
-        
-        // auth.createUserWithEmailAndPassword(email, password).then((data)=>{
-        //     // //console.log(data.user.uid);
-        //     firestore.collection('/feeders').doc(data.user.uid).set({
-        //         name: name,
-        //         joined: firestoreTimestamp,
-        //         uid: data.user.uid,
-        //         org: null,
-        //         lovebytes: []
-        //     }).then(()=>{
-        //         // //console.log("feeder registration successfull!");
-        //         this.setState({ email: '', password: ''}, ()=>{
-        //             // this.props.setLovebytes([]);
-        //             this.props.setName(name);
-        //             this.props.setUid(data.user.uid);
-        //             this.props.setLoginStatus(true);
-        //             this.props.fetchPosts();  
-        //             this.props.setLoginPop(false);
-        //         })              
-        //     })
-        // }).catch(error=>{
-        //     //console.log(error)
-        //     if(error.code === 'auth/network-request-failed'){
-        //         alert("Network connectivity issue. Kindly check your internet connection.")
-        //     }else if(error.code === 'auth/email-already-in-use'){
-        //         alert("We are finding it difficult to register new users at the moment, kindly try again after some time");
-        //     }else{
-        //         firestore.collection('/registrationErrors').add({
-        //             'error': error.code,
-        //             'error_info': error.message,
-        //             'error_logged': firestoreTimestamp,
-        //             'email': email,
-        //         }).then(()=>{
-        //             //console.log('Error successfully logged.')
-        //         })
-        //         .catch((error)=>{
-        //             //console.log('Unable to log error.')
-        //         });
-        //         // //console.log(error)
-        //     }
-        // })
     }
 
     render(){
-        const { email, password, name, register, invalidEmailPassword, selectedLoginMethod, loginMethodGoogle } = this.state;
+        const { email, password, name, register, invalidEmailPassword, selectedLoginMethod, loading, loginMethodGoogle } = this.state;
     
         const inputStyling ={
             padding:'10px 20px',
@@ -320,14 +302,22 @@ class Login extends React.Component{
         return(
             <Modal setVisibility={this.props.setLoginPop}>
                 <div style={{height:'100%', display:'flex', justifyContent:'center'}}>
+                    {
+                        this.state.noticeVisibility ? 
+                            <Notice 
+                                notice={this.state.noticeMsg}
+                                setVisibility={this.handleNoticeVisibilty}
+                            />
+                            :
+                            null
+                    }
                     
                     {/* Login Form */}
                     <LoginEmailForm 
                         email={email}
                         password={password}
                         handleSignIn={this.handleSignIn}
-                        handleEmailChange={this.handleEmailChange}
-                        handlePasswordChange={this.handlePasswordChange}
+                        handleChange={this.handleChange}
                         handleToggle={this.handleToggle}
                         inputStyling={inputStyling}
                         formStyling={formStyling}
@@ -336,6 +326,7 @@ class Login extends React.Component{
                         selectedLoginMethod={selectedLoginMethod}
                         loginMethodGoogle={loginMethodGoogle}
                         handleLoginMethod={this.handleLoginMethod}
+                        loading={loading}
                     />
                     
                     {/* Register Form*/}
@@ -350,24 +341,27 @@ class Login extends React.Component{
                             <input 
                                 style={inputStyling}
                                 type='text'
+                                name='name'
                                 placeholder='Name'
                                 value={name}
-                                onChange={(e)=>this.setState({name: e.target.value})}
+                                onChange={(e)=>this.handleChange(e, 'register')}
                             />
                             <input 
                                 style={inputStyling}
                                 type='email'
+                                name='email'
                                 placeholder='Email'
                                 value={email}
-                                onChange={(e)=>this.setState({email: e.target.value})}
+                                onChange={(e)=>this.handleChange(e, 'register')}
                                 />
                             <input 
                                 style={inputStyling}
                                 type='password'
+                                name='password'
                                 value={password}
                                 minLength='6'
                                 placeholder='Password'
-                                onChange={(e)=>this.setState({password: e.target.value})}
+                                onChange={(e)=>this.handleChange(e, 'register')}
                             />
                         </div>
                         <div style={{

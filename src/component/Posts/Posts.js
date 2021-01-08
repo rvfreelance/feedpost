@@ -5,6 +5,7 @@ import Heart from './Heart';
 
 import HeartSvg from '../../assets/svg/heart.svg';
 import HeartSvgFilled from '../../assets/svg/heart_filled.svg';
+import Notice from '../Notice/Notice';
 
 import firebase, { firestore } from '../../firebase/firebase';
 
@@ -14,7 +15,7 @@ import './Posts.scss';
 const Posts =(props) =>{
     const { posts, width, lovebytes, setLovebytes, loginStatus, setFilteredPosts, filteredPosts, searchValue, setSearchValue } = props;
     // const [lovedPosts, setLovedPosts] = useState([]);
-    const [difficultyBanner, setDifficultyBanner] = useState(false);
+    const [noticeVisibility, setNoticeVisibility] = useState(false);
 
     const renderPosts = () =>{
         if(searchValue.length){
@@ -49,7 +50,7 @@ const Posts =(props) =>{
                     // //console.log('added id: ', id);
                     setLovebytes([...lovebytes, id]);
                 }).catch(error=>{
-                        setDifficultyBanner(true);
+                        setNoticeVisibility(true);
                     //console.log('failed in batchAdd: ', error)
                 })
 
@@ -72,12 +73,12 @@ const Posts =(props) =>{
                     // //console.log('removed id: ', id);
                     setLovebytes(filter);
                 }).catch(error=>{
-                    setDifficultyBanner(true);
+                    setNoticeVisibility(true);
                     //console.log('failed in batchRem: ', error)
                 })
             }
         }else{
-            setDifficultyBanner(true);
+            setNoticeVisibility(true);
             return null;
         }
     };  
@@ -116,12 +117,16 @@ const Posts =(props) =>{
     // }
 
     return(
-        <div className={`posts ${props.width<=800? 'pb-90':''}`}>
-            <div className={`transparent ${difficultyBanner? 'difficulty': ''}`}
-                onAnimationEnd={()=>setDifficultyBanner(false)}    
-            >
-                <span>Unable to connect</span>
-            </div>
+        <div className={`posts ${props.width<=800? 'pb-90':''}`}>           
+            {
+                noticeVisibility? 
+                    <Notice
+                        notice={1}
+                        setVisibility={setNoticeVisibility}
+                    />
+                :
+                    null
+            }
             {
                 loginStatus? 
                     <SearchBar 

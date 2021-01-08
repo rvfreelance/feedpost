@@ -383,26 +383,6 @@ hr{
     }
 }
 
-.transparent{
-    position: fixed;
-    bottom: 140px;
-    opacity: 0;
-    background-color: rgba(75, 75, 75, 0.6);
-    color: white;
-    padding: 10px 20px;
-    z-index: 2;
-    border-radius: 30px;
-}
-.difficulty{
-    animation: visible1 1.8s linear 0s forwards normal;
-}
-
-@keyframes visible1 {
-    0%{opacity: 0;}
-    20%{opacity: 1;}
-    80%{opacity: 1;}
-    100%{opacity: 0;}
-}
 .x-post-button-div{
     // background-color: pink;
 }
