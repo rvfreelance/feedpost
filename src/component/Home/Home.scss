@@ -23,9 +23,17 @@
     // padding-left: 30px;
     font-family: 'Qwigley', cursive;
     font-size: 5rem;
-    font-weight: 600;
+    font-weight: 400;
 }
 
+.screen2-txt{
+    font-size: 2rem;
+}
+.feedpost-small{
+    font-family: 'Qwigley', cursive;
+    font-size: 4rem;
+    font-weight: 400;
+}
 @media only screen and (max-width: 600px){
     .full-screen{
         .screen1-txt{

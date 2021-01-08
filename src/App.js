@@ -304,9 +304,10 @@ class ActualApp extends React.Component{
             )
             :
             <Home 
-              setAddFeed={setAddFeed}
+              // setAddFeed={setAddFeed}
+              loginPop={loginPop}
               setLoginPop={setLoginPop}
-              width={width}
+              // width={width}
             />
           }
           <div className={`${width<=800 ? 'bottom-fixed-bg':''} ${!currentUser || loginPop || addFeed? 'hidden':''}`}>
