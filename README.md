@@ -1,3 +1,7 @@
+# This project requires Firebase Authentication, Firestore.
+From your firebase console, create a new project and replace the project's config object with your config object.
+
+
 [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/rvfreelance/feedpost/tree/main)
 
 
