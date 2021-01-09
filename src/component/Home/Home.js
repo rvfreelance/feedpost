@@ -13,11 +13,13 @@ const Home =(props) =>{
 
     if(props.loginPop){
         return(
-            <div className='full-screen flex-c-c'>
-                <span className='screen1-txt'>hello, welcome to 
-                    <br/>
-                    <span className='feedpost'>feed<span style={{color:'rgb(238, 68, 96)'}}>Post</span></span>
-                </span>
+            <div className='home'>
+                <div className='full-screen flex-c-c'>
+                    <span className='screen1-txt'>hello, welcome to 
+                        <br/>
+                        <span className='feedpost' style={{fontWeight:'600'}}>feed<span style={{color:'rgb(238, 68, 96)'}}>Post</span></span>
+                    </span>
+                </div>
             </div>
         )
     }else{
@@ -26,14 +28,14 @@ const Home =(props) =>{
                 <div className='full-screen flex-c-c'>
                     <span className='screen1-txt'>hello, welcome to 
                         <br/>
-                        <span className='feedpost'>feed<span style={{color:'rgb(238, 68, 96)'}}>Post</span></span>
+                        <span className='feedpost' style={{fontWeight:'600'}}>feed<span style={{color:'rgb(238, 68, 96)'}}>Post</span></span>
                     </span>
                 </div>
                 <div className='full-screen flex-c-c'>
                     <span className='screen1-txt'>Question
                         <br/>
                         <br/>
-                        <span className='feedpost'>What is feed<span style={{color:'rgb(238, 68, 96)'}}>Post</span>?</span>
+                        <span className='feedpost-small'>What is feed<span style={{color:'rgb(238, 68, 96)'}}>Post</span> ?</span>
                     </span>
                 </div>
                 <div className='full-screen flex-c-c'>
@@ -110,14 +112,14 @@ const Home =(props) =>{
                                 loveState? 
                                     <img className={`pointer ${loveState? 'svg-love':''}`} 
                                         src={HeartSvgFilled} 
-                                        width='100%' 
+                                        width='70%' 
                                         alt=''
                                         onClick={()=>setLoveState(!loveState)}    
                                     />
                                     :
                                     <img className={`pointer ${loveState? '':'svg-no-love'}`} 
                                         src={HeartSvg} 
-                                        width='100%' 
+                                        width='70%' 
                                         alt=''
                                         onClick={()=>setLoveState(!loveState)}
                                     />

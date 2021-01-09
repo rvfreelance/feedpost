@@ -16,13 +16,16 @@ const firebaseConfig = {
 
 
 
-  // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+  // Initialize Firebase only once
+if(!firebase.apps.length){
+  firebase.initializeApp(firebaseConfig);
+}
 
 export const firestoreTimestamp = firebase.firestore.FieldValue.serverTimestamp();
 export const firestore = firebase.firestore();
 export const auth = firebase.auth();
 export const storage = firebase.storage();
+export const storageRef = storage.ref();
 
 export const createUserProfileDocument = async (userAuth, additionalData) =>{
   if(!userAuth) return;

@@ -11,64 +11,79 @@ import { firestore, firestoreTimestamp } from '../../firebase/firebase';
 // function preview() {
 // }
 
-const ImageUpload =(props) =>{
-    const { setImage } = props;
+// const ImageUpload =(props) =>{
+//     const { setImage } = props;
 
-    const [ imagePreviewUrl, setImagePreviewUrl ] = useState('');
-    let fileInput = React.createRef();
+//     const [ imagePreviewUrl, setImagePreviewUrl ] = useState('');
+//     let fileInput = React.createRef();
 
-    const handleImageChange =(e) =>{
+//     const handleImageChange =(e) =>{
     
-        e.preventDefault();
+//         e.preventDefault();
     
-        const read = new FileReader();
+//         const read = new FileReader();
     
-        const imageFile = e.target.files[0];
+//         const imageFile = e.target.files[0];
     
-        read.onloadend =() =>{
-            const image = read.result;
-            setImage(image);
-            setImagePreviewUrl(image);
-        };
+//         read.onloadend =() =>{
+//             const image = read.result;
+//             setImage(image);
+//             setImagePreviewUrl(image);
+//         };
     
-        read.readAsDataURL(imageFile);
-    }
+//         read.readAsDataURL(imageFile);
+//     }
 
-    const handleClick =() =>{
-        fileInput.current.click();
-    }
+//     const handleClick =() =>{
+//         fileInput.current.click();
+//     }
 
-    const handleRemove =() =>{
-        setImage('');
-        setImagePreviewUrl('');
-        fileInput.current.value = null;
-    };
+//     const handleRemove =() =>{
+//         setImage('');
+//         setImagePreviewUrl('');
+//         fileInput.current.value = null;
+//     };
     
-    return(
-        <div>
-            {/* <input 
-                type='file'
-                onChange={handleImageChange}
-                ref={fileInput}
-            /> */}
-            <label className="custom-file-upload">
-                <input type="file" onChange={handleImageChange} ref={fileInput}/>
-                <img
-                    className={imagePreviewUrl? '':'hidden'} 
-                    src={imagePreviewUrl} 
-                    width="150px"
-                    alt='uploaded'
-                />
+//     return(
+//         <div>
+//             {/* <input 
+//                 type='file'
+//                 onChange={handleImageChange}
+//                 ref={fileInput}
+//             /> */}
+//             <label className="custom-file-upload">
+//                 <input type="file" onChange={handleImageChange} ref={fileInput}/>
+//                 <img
+//                     className={imagePreviewUrl? '':'hidden'} 
+//                     src={imagePreviewUrl} 
+//                     width="150px"
+//                     alt='uploaded'
+//                 />
 
-                <div style={{display:'flex', justifyContent:'space-between', width:'150px'}}>
-                    <span className='custom-title' onClick={()=>handleClick()}>{imagePreviewUrl? 'Change':'Add image'}</span>
-                    <span className={imagePreviewUrl? 'custom-title':'hidden'} onClick={()=>handleRemove()}>Remove</span>
-                </div>
-                <span style={{fontSize:'0.6rem', textDecoration:'none'}}>(.jpg/ .jpeg/ .png only)</span>
-            </label>
-        </div>
-    )
-}
+//                 <div style={{display:'flex', justifyContent:'space-between', width:'150px'}}>
+//                     <span className='custom-title' onClick={()=>handleClick()}>{imagePreviewUrl? 'Change':'Add image'}</span>
+//                     <span className={imagePreviewUrl? 'custom-title':'hidden'} onClick={()=>handleRemove()}>Remove</span>
+//                 </div>
+//                 <span style={{fontSize:'0.6rem', textDecoration:'none'}}>(.jpg/ .jpeg/ .png only)</span>
+//             </label>
+//         </div>
+//     )
+// }
+
+
+// const ImageUpload =(props) =>{
+
+//     return(
+//         <div>
+//             Add Image
+//             <input type='file'
+//                 onChange={(e)=>props.setImage(e.target.files[0])}
+//             />
+//         </div>
+//     )
+// }
+
+
 
 const Create=(props) =>{
     const [image, setImage] = useState(null);
@@ -81,7 +96,69 @@ const Create=(props) =>{
 
     const { width } = props;
 
+    
+    
     let feeds =[];
+    
+    // const onImageUpload =(feedId) =>{
+    //     // console.log('image: ', image,', feed Id: ', feedId);
+    //     const fileRef = storageRef.child(`images/feeds/${feedId}`)
+    //     let uploadTask = fileRef.putString(image, 'data_url')
+        
+    //     uploadTask.on('state_changed', (snapshot)=>{
+
+    //         let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //         console.log('Upload is ', progress, '% completed');
+
+    //         switch(snapshot.state){
+    //             case firebase.storage.TaskState.PAUSED:
+    //                 console.log('upload paused');
+    //                 break;
+    //             case firebase.storage.TaskState.RUNNING: 
+    //                 console.log('upload is running');
+    //                 break;
+
+    //         }
+    //     })
+    //         .then((snapsh))
+    //         fileRef.getDownloadURL();
+    //         firestore.doc(feedId).update({
+    //             f_image: url
+    //         })
+    //     }catch(error){
+    //         console.log(error)
+    //     }
+    // }
+    
+    const getFeed =(feedId) =>{
+        firestore.doc(`/feeds/${feedId}`).get()
+            .then(doc=>{
+                feeds.push({
+                    'fId': feedId,
+                    'fTitle': doc.data().f_title,
+                    'fBrief': doc.data().f_brief,
+                    'fLink': doc.data().f_link,
+                    'fIsAuthor': doc.data().f_is_author,
+                    'fImage': doc.data().f_image,
+                    'fLoved': doc.data().f_loved,
+                    'fUpdated': doc.data().f_updated.toDate().toDateString(),
+                    'feederName': doc.data().feeder_name,
+                    'feederImg': doc.data().feeder_img,
+                    'feederUid': doc.data().feeder_uid
+                });
+
+                feeds = [...feeds, ...props.posts];
+
+                props.setPosts(feeds);
+                props.setAddFeed(false);
+            })
+            .catch(error=>{
+                console.log(error);
+                setLoading(false);
+                setNoticeVisibility(true);
+            })
+    }
+
     const FeedIn =() =>{
         if(postTitle.length && props.uid!==null){
             firestore.collection('/feeds').add({
@@ -98,29 +175,14 @@ const Create=(props) =>{
             })
             .then(feed=>{
                 // //console.log(feed.id);
-                props.setAddFeed(false);
+                // if(image!== null){
+                //     onImageUpload(feed.id)
+                //     .then(getFeed(feed.id))
+                // }else{
+                    getFeed(feed.id)
+                // }
                 
                 //fetch the feed from firebase and add to current list
-                firestore.doc(`/feeds/${feed.id}`).get()
-                    .then(doc=>{
-                        feeds.push({
-                            'fId': feed.id,
-                            'fTitle': doc.data().f_title,
-                            'fBrief': doc.data().f_brief,
-                            'fLink': doc.data().f_link,
-                            'fIsAuthor': doc.data().f_is_author,
-                            'fImage': doc.data().f_image,
-                            'fLoved': doc.data().f_loved,
-                            'fUpdated': doc.data().f_updated.toDate().toDateString(),
-                            'feederName': doc.data().feeder_name,
-                            'feederImg': doc.data().feeder_img,
-                            'feederUid': doc.data().feeder_uid
-                        });
-    
-                        feeds = [...feeds, ...props.posts];
-    
-                        props.setPosts(feeds);
-                    })
             }).catch(error=>{
                 setLoading(false);
                 setNoticeVisibility(true);
@@ -193,7 +255,7 @@ const Create=(props) =>{
                                                 null
                                         }
                                     </div>
-                                    <ImageUpload setImage={setImage} image={image}/>
+                                    {/* <ImageUpload setImage={setImage} image={image}/> */}
                                     {/* <label className="custom-file-upload">
                                         <input type="file" onChange={(e)=> this.handleChange(e)}/>
                                         <img

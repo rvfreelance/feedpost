@@ -368,9 +368,8 @@ class Login extends React.Component{
                             // backgroundColor:'pink',
                             borderRadius:'25px',
                             display:'flex', 
-                            flexDirection:'column', 
-                            justifyContent:'space-between', 
-                            alignItems:'center',
+                            justifyContent:'center', 
+                            alignItems:'flex-start',
                             paddingBottom:'10px'
                             }}
                         >
@@ -382,6 +381,15 @@ class Login extends React.Component{
                                 >
                                     Register now
                             </button>
+                        </div>
+                        <div style={{ 
+                            position: 'absolute', 
+                            bottom: '10px', 
+                            width:'100%',
+                            display:'flex',
+                            justifyContent:'center'
+                            }}
+                        >
                             <span style={{fontSize:'0.8rem'}}>Already registered?&nbsp;
                                 <span style={{
                                     // textDecoration:'underline', 
