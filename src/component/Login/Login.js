@@ -89,6 +89,7 @@ const LoginEmailForm =(props) =>{
                         Select Login Method
                         <br/>
                         <br/>
+                        <span style={{fontSize:'0.8rem', color:'orange'}}>Currently facing some issues signing in with Google</span>
                         <br/>
                         <button className='x-post-button' 
                             style={{color:'#4b4b4b', fontSize:'2.2rem'}} 
