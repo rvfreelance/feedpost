@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Loading from '../Loading/Loading';
-// import WorldPost from '../../assets/svg/world_post.svg';
 import ReloadSvg from '../../assets/svg/reload.svg';
 import HeartSvg from '../../assets/svg/heart.svg';
 import HeartSvgFilled from '../../assets/svg/heart_filled.svg';
@@ -106,31 +105,26 @@ const Home =(props) =>{
                 </div>
     
                 <div className='full-screen'>
-                    {/* <div className='animation'> */}
-                        <div className='flex-c-c' style={{ width:'100%', height:'30%'}}>
-                            {
-                                loveState? 
-                                    <img className={`pointer ${loveState? 'svg-love':''}`} 
-                                        src={HeartSvgFilled} 
-                                        width='70%' 
-                                        alt=''
-                                        onClick={()=>setLoveState(!loveState)}    
-                                    />
-                                    :
-                                    <img className={`pointer ${loveState? '':'svg-no-love'}`} 
-                                        src={HeartSvg} 
-                                        width='70%' 
-                                        alt=''
-                                        onClick={()=>setLoveState(!loveState)}
-                                    />
-                                    
-                            }
-                        </div>
-                        {/* <span className='screen2-txt'>the most */}
-                            <br/>
-                            <span className='feedpost-small'>your<span style={{color:'rgb(238, 68, 96)'}}> lovebyte</span></span>
-                        {/* </span> */}
-                    {/* </div> */}
+                    <div className='flex-c-c' style={{ width:'100%', height:'30%'}}>
+                        {
+                            loveState? 
+                                <img className={`pointer ${loveState? 'svg-love':''}`} 
+                                    src={HeartSvgFilled} 
+                                    width='70%' 
+                                    alt=''
+                                    onClick={()=>setLoveState(!loveState)}    
+                                />
+                                :
+                                <img className={`pointer ${loveState? '':'svg-no-love'}`} 
+                                    src={HeartSvg} 
+                                    width='70%' 
+                                    alt=''
+                                    onClick={()=>setLoveState(!loveState)}
+                                />                       
+                        }
+                    </div>
+                    <br/>
+                    <span className='feedpost-small'>your<span style={{color:'rgb(238, 68, 96)'}}> lovebyte</span></span>
                 </div>
                 <div className='full-screen'>
                     <div className='animation'>
@@ -143,16 +137,7 @@ const Home =(props) =>{
                         </span>
                     </div>
                 </div>
-                {/* <div className='full-screen'>
-                    <div className='animation'>
-                        <Loading />
-                        <span className='screen2-txt'>the most
-                            <br/>
-                            <span className='feedpost-small'>satisfying<span style={{color:'rgb(238, 68, 96)'}}> animations</span></span>
-                        </span>
-                    </div>
-                </div> */}
-              
+            
                 <div className='full-screen flex-c-c'>
                     <span className='screen1-txt'>
                         <br/> 
@@ -176,10 +161,8 @@ const Home =(props) =>{
                             <span style={{fontSize:'5rem'}}>+</span>
                         </div>
                     </div>
-                    {/* <span className='screen1-txt'> */}
                         <br/>
                         <span className='feedpost'>start <span style={{color:'rgb(238, 68, 96)'}}>feeding !</span></span>
-                    {/* </span> */}
                 </div>
     
                 
@@ -200,48 +183,7 @@ const Home =(props) =>{
                         <span style={{fontSize:'1rem'}}>{'if(💪er > awesomeFeatures)😉'}</span>
                     </span>
                 </div>
-    
-    
-    
-    
-    
-                {/* ADD POST ---------------------------------- */}
-                    {/* <div className='flex-c-c' style={{paddingTop: '100px'}}>
-                        <div style={{
-                                width:'80%', 
-                                height:'80vh', 
-                                display:'flex', 
-                                alignItems:'center', 
-                                justifyContent: props.width>1000? 'space-between': 'center'
-                            }}
-                        >
-                            <div>
-                                <span style={{fontSize:'2rem'}}>Let the world see what you post!</span>
-                                <br/><br/><br/>
-                                <button className='x-post-button' 
-                                    style={{fontSize:'2.5rem', boxShadow:'0px 0px 15px white'}}
-                                    onClick={()=>{
-                                        if(props.loginStatus){
-                                            props.setAddFeed(true)
-                                        }else{
-                                            props.setLoginPop(true);
-                                            // props.setAddFeed(true);      
-                                        }
-                                    }}
-                                >
-                                    Add Post
-                                </button>
-                            </div>
-                            <img className={props.width>1000? '':'hidden'} 
-                                src={WorldPost} 
-                                width={props.width>1200? '500px': '350px'} 
-                                alt=''
-                            />
-                    </div>
-                </div> */}
             </div>
-    
-    
         )
     }
 
